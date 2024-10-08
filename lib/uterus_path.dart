@@ -1,39 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_histo_path/uterus_path.dart';
+import 'package:flutter_histo_path/uterus.dart';
 
-class Uterus extends StatefulWidget {
+class UterusPath extends StatefulWidget {
   @override
-  _UterusState createState() => _UterusState();
+  _UterusPathState createState() => _UterusPathState();
 }
 
-class _UterusState extends State<Uterus> {
+class _UterusPathState extends State<UterusPath> {
   final List<Map<String, dynamic>> points = [
     {
-      'left': 240.0,
-      'top': 120.0,
+      'left': 300.0,
+      'top': 143.0,
       'color': Colors.red,
-      'description': 'Lining epithelium: Simple columnar',
+      'description': 'Tall columnar lining',
     },
     {
-      'left': 260.0,
-      'top': 210.0,
+      'left': 270.0,
+      'top': 170.0,
       'color': Colors.blue,
-      'description': 'Spiral arteries: The tortuous blood vessels in the endometrium',
+      'description': 'stroma',
     },
     {
-      'left': 150.0,
-      'top': 185.0,
+      'left': 310.0,
+      'top': 215.0,
       'color': Colors.green,
-      'description': 'Stroma Containing the connective tissue and blood vessels',
+      'description': 'The cells filled with mucin with basally pushed nucleus',
     },
-    {
-      'left': 130.0,
-      'top': 265.0,
-      'color': Colors.purple,
-      'description': 'Uterine glands: Tubular glands which become more coiled in the secretory phase of the menstrual cycle',
-    },
+    // {
+    //   'left': 130.0,
+    //   'top': 265.0,
+    //   'color': Colors.purple,
+    //   'description': 'Uterine glands: Tubular glands which become more coiled in the secretory phase of the menstrual cycle',
+    // },
   ];
 
   int _currentPointIndex = 0;
@@ -54,7 +54,7 @@ class _UterusState extends State<Uterus> {
   Future<void> _loadImageFromFirebase() async {
     try {
       // Get the download URL from Firebase Storage
-      final Reference storageRef = FirebaseStorage.instance.ref().child('uterus/histo/Female reproductive system_Uterus_High magnification.png');
+      final Reference storageRef = FirebaseStorage.instance.ref().child('uterus/patho/mucinous cystadenoma 1.jpg');
       String downloadUrl = await storageRef.getDownloadURL();
       setState(() {
         _imageUrl = downloadUrl; // Store the image URL in state
@@ -138,23 +138,24 @@ class _UterusState extends State<Uterus> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '',
+          'Switch to Histology',
           style: TextStyle(color: Colors.white),
+          textAlign: TextAlign.left,
         ),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false, // Set to false to prevent the default back button
         backgroundColor: Colors.red,
         centerTitle: false,
-        actions: [
-          Text(
-            'Switch to Pathology',
-            style: TextStyle(color: Colors.white, fontSize: 20), // Same font size and color as title
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white, // Set the back arrow color to white
           ),
-          IconButton(
-            icon: Icon(Icons.arrow_forward, color: Colors.white,),
-            onPressed: _toggleSection,
-          ),
-        ],
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigate back when the button is pressed
+          },
+        ),
       ),
+
       body: _imageUrl.isEmpty
           ? Center(child: CircularProgressIndicator())
           : Column(
@@ -237,7 +238,7 @@ class _UterusState extends State<Uterus> {
   // Helper method to build the bottom dialog
   Widget _buildBottomDialog() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.35, // Set height to 40% of the screen
+      height: MediaQuery.of(context).size.height * 0.30, // Set height to 40% of the screen
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.red,
@@ -247,21 +248,21 @@ class _UterusState extends State<Uterus> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Uterus Secretory Phase',
+            'Mucinous cystadenoma',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 8),
-          Text(
-            'High Magnification',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
+          // SizedBox(height: 8),
+          // Text(
+          //   'High Magnification',
+          //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+          //   textAlign: TextAlign.center,
+          // ),
           SizedBox(height: 16),
           Text(
             _isStarted
                 ? points[_currentPointIndex]['description']
-                : 'The endometrium of the secretory phase of the uterus shows the coiled uterine gland with edematous stroma. The endometrial lining is considerably thickened.',
+                : 'The cyst is lined by a single layer of cells having basal nuclei and apical mucinous vacuoles. There is no invasion or papillae formation. There is no atypia or necrosis',
             style: TextStyle(fontSize: 16, color: Colors.white),
             textAlign: TextAlign.center,
           ),
@@ -274,7 +275,7 @@ class _UterusState extends State<Uterus> {
                 child: Text('Previous'),
               ),
               ElevatedButton(
-                onPressed: _isStarted && _currentPointIndex < points.length - 1 ? _nextPoint : _startProcess,
+                onPressed: _isStarted ? _nextPoint : _startProcess,
                 child: Text(_isStarted ? 'Next' : 'Start'),
               ),
               ElevatedButton(

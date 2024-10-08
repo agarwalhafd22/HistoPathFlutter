@@ -1,11 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 import 'package:firebase_database/firebase_database.dart'; // Import FirebaseDatabase
 import 'package:flutter/material.dart';
+import 'package:flutter_histo_path/endocrine_system.dart';
+import 'package:flutter_histo_path/integumentary_system.dart';
+import 'package:flutter_histo_path/lymphatic_system.dart';
+import 'package:flutter_histo_path/male_reproductive_system.dart';
+import 'package:flutter_histo_path/renal_system.dart';
+import 'package:flutter_histo_path/skeletal_system.dart';
+import 'package:flutter_histo_path/student_quizzes.dart';
+import 'package:flutter_histo_path/vascular_system.dart';
 import 'student_login.dart'; // Import StudentLogin page to redirect after logout
 import 'update_profile.dart'; // Import UpdateProfile page
 import 'package:flutter/foundation.dart'; // Import kIsWeb
 import 'gastro_int_system.dart'; // Import the screen for Gastrointestinal
 import 'female_reproductive_system.dart'; // Import the screen for Female Reproductive
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 class MainActivity extends StatefulWidget {
   @override
@@ -21,8 +30,10 @@ class _MainActivityState extends State<MainActivity> {
   @override
   void initState() {
     super.initState();
-    _fetchUserData(); // Fetch user data when the widget is initialized
+    _fetchUserData();// Fetch user data when the widget is initialized
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }
+
 
   Future<void> _fetchUserData() async {
     User? user = FirebaseAuth.instance.currentUser; // Get the current user
@@ -86,7 +97,7 @@ class _MainActivityState extends State<MainActivity> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Color(0xFFbe252d),
+        backgroundColor: Colors.red,
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
@@ -116,6 +127,16 @@ class _MainActivityState extends State<MainActivity> {
                       style: TextStyle(fontSize: 40.0),
                     ),
                   ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.query_builder),
+                  title: Text('Quizzes'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => StudentQuizzes()), // Navigate to Gastrointestinal screen
+                    );
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.inbox), // Add Inbox icon
@@ -175,7 +196,10 @@ class _MainActivityState extends State<MainActivity> {
                       );
                     }),
                     _buildCard('assets/images/renalbg.png', cardWidth, () {
-                      // Navigate to Renal screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RenalSystem()), // Navigate to Gastrointestinal screen
+                      );
                     }),
                     _buildCard('assets/images/femalers.png', cardWidth, () {
                       Navigator.push(
@@ -183,11 +207,41 @@ class _MainActivityState extends State<MainActivity> {
                         MaterialPageRoute(builder: (context) => FemaleReproductiveSystem()), // Navigate to Female Reproductive screen
                       );
                     }),
-                    _buildCard('assets/images/respiratorybg.png', cardWidth, () {
-                      // Navigate to Respiratory screen
+                    _buildCard('assets/images/endocrine.png', cardWidth, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EndocrineSystem()), // Navigate to Female Reproductive screen
+                      );
                     }),
-                    _buildCard('assets/images/nervous.png', cardWidth, () {
-                      // Navigate to Nervous System screen
+                    _buildCard('assets/images/integumentary.png', cardWidth, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => IntegumentarySystem()), // Navigate to Female Reproductive screen
+                      );
+                    }),
+                    _buildCard('assets/images/vascular.png', cardWidth, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => VascularSystem()), // Navigate to Female Reproductive screen
+                      );
+                    }),
+                    _buildCard('assets/images/malers.png', cardWidth, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MaleReproductiveSystem()), // Navigate to Female Reproductive screen
+                      );
+                    }),
+                    _buildCard('assets/images/skeletal.png', cardWidth, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SkeletalSystem()), // Navigate to Female Reproductive screen
+                      );
+                    }),
+                    _buildCard('assets/images/lymphatic.png', cardWidth, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LymphaticSystem()), // Navigate to Female Reproductive screen
+                      );
                     }),
                   ],
                 ),

@@ -45,8 +45,12 @@ class _AllQuizzesState extends State<AllQuizzes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Quizzes'),
+        title: Text(
+          'All Quizzes',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // Bold font and white color
+        ),
         backgroundColor: Colors.red,
+        automaticallyImplyLeading: false, // Remove back arrow
       ),
       body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
         future: _fetchQuizzesByTeachers(),
@@ -75,7 +79,7 @@ class _AllQuizzesState extends State<AllQuizzes> {
                 children: quizzes.map((quiz) {
                   return ListTile(
                     title: Text(quiz['title']),
-                    subtitle: Text('Created by: $teacherName'),
+                    subtitle: Text('Created on: ${quiz['createdAt'].toDate().toLocal()}'), // Change 'Created by' to 'Created on'
                     onTap: () => _navigateToQuizDetails(quiz), // Navigate to quiz details
                   );
                 }).toList(),
@@ -98,8 +102,12 @@ class QuizDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(quiz['title']),
+        title: Text(
+          quiz['title'],
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // Bold font and white color
+        ),
         backgroundColor: Colors.red,
+        automaticallyImplyLeading: false, // Remove back arrow
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

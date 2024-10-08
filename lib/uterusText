@@ -1,0 +1,281 @@
+// import 'package:flutter/material.dart';
+// import 'dart:math';
+//
+// class Uterus extends StatefulWidget {
+//   @override
+//   _UterusState createState() => _UterusState();
+// }
+//
+// class _UterusState extends State<Uterus> {
+//   final List<Map<String, dynamic>> points = [
+//     {
+//       'left': 100.0,
+//       'top': 150.0,
+//       'color': Colors.red,
+//       'description': 'This is description for Point 1',
+//     },
+//     {
+//       'left': 200.0,
+//       'top': 250.0,
+//       'color': Colors.blue,
+//       'description': 'This is description for Point 2',
+//     },
+//     {
+//       'left': 150.0,
+//       'top': 300.0,
+//       'color': Colors.green,
+//       'description': 'This is description for Point 3',
+//     },
+//     {
+//       'left': 250.0,
+//       'top': 350.0,
+//       'color': Colors.purple,
+//       'description': 'This is description for Point 4',
+//     },
+//   ];
+//
+//   int _currentPointIndex = 0;
+//   bool _isNavigating = false;
+//   bool _showContinueButton = false;
+//
+//   final TransformationController _transformationController = TransformationController();
+//
+//   @override
+//   void dispose() {
+//     _transformationController.dispose();
+//     super.dispose();
+//   }
+//
+//   void _resetZoom() {
+//     setState(() {
+//       _transformationController.value = Matrix4.identity();
+//       _isNavigating = false;
+//       _currentPointIndex = 0;
+//       _showContinueButton = false;
+//     });
+//   }
+//
+//   void _zoomToPoint(int index) {
+//     final double scaleFactor = 1.5;
+//     final double imageWidth = MediaQuery.of(context).size.width * 0.9;
+//     final double imageHeight = MediaQuery.of(context).size.width * 0.9;
+//
+//     final double xTranslation = -points[index]['left']! * scaleFactor + (imageWidth / 2);
+//     final double yTranslation = -points[index]['top']! * scaleFactor + (imageHeight / 2);
+//
+//     _transformationController.value = Matrix4.identity()
+//       ..translate(xTranslation, yTranslation)
+//       ..scale(scaleFactor);
+//   }
+//
+//   void _showBottomSheet(BuildContext context, String description) {
+//     showModalBottomSheet(
+//       context: context,
+//       isDismissible: true,
+//       enableDrag: true,
+//       builder: (BuildContext context) {
+//         return GestureDetector(
+//           onTap: () {
+//             Navigator.pop(context);
+//             _resetZoom();
+//           },
+//           child: Container(
+//             padding: const EdgeInsets.all(16.0),
+//             child: GestureDetector(
+//               onTap: () {},
+//               child: Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   Text(
+//                     description,
+//                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//                     textAlign: TextAlign.center,
+//                   ),
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       if (_currentPointIndex > 0)
+//                         IconButton(
+//                           icon: Icon(Icons.arrow_back),
+//                           onPressed: () {
+//                             _previousPoint();
+//                             Navigator.pop(context);
+//                             _showBottomSheet(context, points[_currentPointIndex]['description']);
+//                           },
+//                         ),
+//                       if (_currentPointIndex < points.length - 1)
+//                         IconButton(
+//                           icon: Icon(Icons.arrow_forward),
+//                           onPressed: () {
+//                             _nextPoint();
+//                             Navigator.pop(context);
+//                             _showBottomSheet(context, points[_currentPointIndex]['description']);
+//                           },
+//                         ),
+//                       if (_currentPointIndex == points.length - 1)
+//                         Padding(
+//                           padding: const EdgeInsets.all(8.0),
+//                           child: ElevatedButton(
+//                             onPressed: () {
+//                               Navigator.pop(context);
+//                               setState(() {
+//                                 _showContinueButton = true;
+//                               });
+//                             },
+//                             child: Text('Finish'),
+//                           ),
+//                         ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//     _zoomToPoint(_currentPointIndex);
+//   }
+//
+//   void _beginNavigation() {
+//     setState(() {
+//       _isNavigating = true;
+//       _currentPointIndex = 0;
+//       _showContinueButton = false;
+//       _showBottomSheet(context, points[_currentPointIndex]['description']);
+//     });
+//   }
+//
+//   void _continueNavigation() {
+//     setState(() {
+//       _isNavigating = true;
+//       _showContinueButton = false;
+//       _showBottomSheet(context, points[_currentPointIndex]['description']);
+//     });
+//   }
+//
+//   void _nextPoint() {
+//     if (_currentPointIndex < points.length - 1) {
+//       setState(() {
+//         _currentPointIndex++;
+//       });
+//     }
+//   }
+//
+//   void _previousPoint() {
+//     if (_currentPointIndex > 0) {
+//       setState(() {
+//         _currentPointIndex--;
+//       });
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Uterus'),
+//         backgroundColor: Colors.red,
+//         centerTitle: true,
+//         automaticallyImplyLeading: false,
+//       ),
+//       body: SingleChildScrollView(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             const SizedBox(height: 10),
+//             Center(
+//               child: Container(
+//                 width: MediaQuery.of(context).size.width * 0.9,
+//                 height: MediaQuery.of(context).size.width * 0.9,
+//                 child: InteractiveViewer(
+//                   transformationController: _transformationController,
+//                   panEnabled: true,
+//                   boundaryMargin: EdgeInsets.all(20),
+//                   minScale: 1.0,
+//                   maxScale: 5.0,
+//                   child: Stack(
+//                     children: [
+//                       Center(
+//                         child: Image.asset(
+//                           'assets/images/uterus_quiz_1.png',
+//                           fit: BoxFit.cover,
+//                         ),
+//                       ),
+//                       if (!_isNavigating)
+//                         ...points.map((point) => Positioned(
+//                           left: point['left']!,
+//                           top: point['top']!,
+//                           child: GestureDetector(
+//                             onTap: () {
+//                               _currentPointIndex = points.indexOf(point);
+//                               _showBottomSheet(context, point['description']);
+//                             },
+//                             child: Icon(
+//                               Icons.location_on,
+//                               color: point['color'],
+//                               size: 30,
+//                             ),
+//                           ),
+//                         )),
+//                       if (_isNavigating)
+//                         Positioned(
+//                           left: points[_currentPointIndex]['left']!,
+//                           top: points[_currentPointIndex]['top']!,
+//                           child: Icon(
+//                             Icons.location_on,
+//                             color: points[_currentPointIndex]['color'],
+//                             size: 30,
+//                           ),
+//                         ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             const Padding(
+//               padding: EdgeInsets.all(8.0),
+//               child: Text(
+//                 'Pinch to zoom',
+//                 textAlign: TextAlign.center,
+//                 style: TextStyle(fontStyle: FontStyle.italic),
+//               ),
+//             ),
+//             if (!_isNavigating && !_showContinueButton)
+//               Padding(
+//                 padding: const EdgeInsets.all(8.0),
+//                 child: ElevatedButton(
+//                   onPressed: _beginNavigation,
+//                   child: Text('Begin'),
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Colors.green,
+//                   ),
+//                 ),
+//               ),
+//             if (_showContinueButton)
+//               Padding(
+//                 padding: const EdgeInsets.all(8.0),
+//                 child: ElevatedButton(
+//                   onPressed: _continueNavigation,
+//                   child: Text('Continue'),
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: Colors.blue,
+//                   ),
+//                 ),
+//               ),
+//             Padding(
+//               padding: const EdgeInsets.all(8.0),
+//               child: ElevatedButton(
+//                 onPressed: _resetZoom,
+//                 child: Text('Reset Zoom'),
+//                 style: ElevatedButton.styleFrom(
+//                   backgroundColor: Colors.red,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

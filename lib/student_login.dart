@@ -8,6 +8,8 @@ import 'package:flutter/scheduler.dart'; // Import for SchedulerBinding
 import 'teacher_login.dart'; // Import the TeacherLogin screen
 import 'student_sign_up.dart';
 import 'main_activity.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +24,13 @@ Future main() async {
       storageBucket: "gs://histopathflutter-ba362.appspot.com",
     ),
   );
+
+  await _preventScreenshots();
   runApp(MyApp());
+}
+
+Future<void> _preventScreenshots() async {
+  await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
 }
 
 class MyApp extends StatelessWidget {

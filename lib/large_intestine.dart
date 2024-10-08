@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_histo_path/uterus_path.dart';
 
-class Uterus extends StatefulWidget {
+class LargeIntestine extends StatefulWidget {
   @override
-  _UterusState createState() => _UterusState();
+  _LargeIntestineState createState() => _LargeIntestineState();
 }
 
-class _UterusState extends State<Uterus> {
+class _LargeIntestineState extends State<LargeIntestine> {
   final List<Map<String, dynamic>> points = [
     {
       'left': 240.0,
@@ -54,7 +54,7 @@ class _UterusState extends State<Uterus> {
   Future<void> _loadImageFromFirebase() async {
     try {
       // Get the download URL from Firebase Storage
-      final Reference storageRef = FirebaseStorage.instance.ref().child('uterus/histo/Female reproductive system_Uterus_High magnification.png');
+      final Reference storageRef = FirebaseStorage.instance.ref().child('gastro/largeintestine/histo/GIT_Large intestine_High magnification.png');
       String downloadUrl = await storageRef.getDownloadURL();
       setState(() {
         _imageUrl = downloadUrl; // Store the image URL in state
@@ -228,60 +228,75 @@ class _UterusState extends State<Uterus> {
             ),
           ),
           // Bottom half for the description dialog
-          _buildBottomDialog(),
-        ],
-      ),
-    );
-  }
-
-  // Helper method to build the bottom dialog
-  Widget _buildBottomDialog() {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.35, // Set height to 40% of the screen
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Uterus Secretory Phase',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 8),
-          Text(
-            'High Magnification',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 16),
-          Text(
-            _isStarted
-                ? points[_currentPointIndex]['description']
-                : 'The endometrium of the secretory phase of the uterus shows the coiled uterine gland with edematous stroma. The endometrial lining is considerably thickened.',
-            style: TextStyle(fontSize: 16, color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: _isStarted ? _previousPoint : null,
-                child: Text('Previous'),
-              ),
-              ElevatedButton(
-                onPressed: _isStarted && _currentPointIndex < points.length - 1 ? _nextPoint : _startProcess,
-                child: Text(_isStarted ? 'Next' : 'Start'),
-              ),
-              ElevatedButton(
-                onPressed: _isStarted ? _finishProcess : null,
-                child: Text('Finish'),
-              ),
-            ],
+          Expanded(
+            flex: 1,
+            child: DraggableScrollableSheet(
+              initialChildSize: 0.46,
+              minChildSize: 0.3,
+              maxChildSize: 1.0,
+              builder: (context, scrollController) {
+                return Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+                  ),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: 8,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        Text(
+                          'Large Intestine',
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'High Magnification',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          _isStarted
+                              ? points[_currentPointIndex]['description']
+                              : 'Under higher magnification, the mucosa of the large intestine shows the crypts of Leiberkuhn with their lining cells, those are the columnar cells and goblet cells. The goblet cells appear empty to basophillic due to the mucin content which washes off during staining process. The connective tissue in the submucosa appear to contain nerve plexus, lymphoid follicles and connective tissue.',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: _isStarted ? _previousPoint : null,
+                              child: Text('Previous'),
+                            ),
+                            ElevatedButton(
+                              onPressed: _isStarted && _currentPointIndex < points.length - 1 ? _nextPoint : _startProcess,
+                              child: Text(_isStarted ? 'Next' : 'Start'),
+                            ),
+                            ElevatedButton(
+                              onPressed: _isStarted ? _finishProcess : null,
+                              child: Text('Finish'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

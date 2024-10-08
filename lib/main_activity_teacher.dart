@@ -1,6 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
 import 'package:firebase_database/firebase_database.dart'; // Import FirebaseDatabase
 import 'package:flutter/material.dart';
+import 'package:flutter_histo_path/renal_system.dart';
+import 'package:flutter_histo_path/skeletal_system.dart';
+import 'package:flutter_histo_path/vascular_system.dart';
+import 'endocrine_system.dart';
+import 'integumentary_system.dart';
+import 'lymphatic_system.dart';
+import 'male_reproductive_system.dart';
 import 'teacher_login.dart'; // Import TeacherLogin page to redirect after logout
 import 'package:flutter/foundation.dart'; // Import kIsWeb
 import 'gastro_int_system.dart'; // Import the screen for Gastrointestinal
@@ -198,27 +205,60 @@ class _MainActivityTeacherState extends State<MainActivityTeacher> {
 
   List<Widget> _buildCardList(double cardWidth) {
     return [
-      _buildCard('assets/images/gastroint.png', cardWidth, () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => GastroIntSystem()), // Navigate to Gastrointestinal screen
-        );
-      }),
-      _buildCard('assets/images/renalbg.png', cardWidth, () {
-        // Navigate to Renal screen
-      }),
-      _buildCard('assets/images/femalers.png', cardWidth, () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FemaleReproductiveSystem()), // Navigate to Female Reproductive screen
-        );
-      }),
-      _buildCard('assets/images/respiratorybg.png', cardWidth, () {
-        // Navigate to Respiratory screen
-      }),
-      _buildCard('assets/images/nervous.png', cardWidth, () {
-        // Navigate to Nervous System screen
-      }),
+    _buildCard('assets/images/gastroint.png', cardWidth, () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => GastroIntSystem()), // Navigate to Gastrointestinal screen
+      );
+    }),
+    _buildCard('assets/images/renalbg.png', cardWidth, () {
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => RenalSystem()), // Navigate to Gastrointestinal screen
+    );
+    }),
+    _buildCard('assets/images/femalers.png', cardWidth, () {
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => FemaleReproductiveSystem()), // Navigate to Female Reproductive screen
+    );
+    }),
+    _buildCard('assets/images/endocrine.png', cardWidth, () {
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => EndocrineSystem()), // Navigate to Female Reproductive screen
+    );
+    }),
+    _buildCard('assets/images/integumentary.png', cardWidth, () {
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => IntegumentarySystem()), // Navigate to Female Reproductive screen
+    );
+    }),
+    _buildCard('assets/images/vascular.png', cardWidth, () {
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => VascularSystem()), // Navigate to Female Reproductive screen
+    );
+    }),
+    _buildCard('assets/images/malers.png', cardWidth, () {
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => MaleReproductiveSystem()), // Navigate to Female Reproductive screen
+    );
+    }),
+    _buildCard('assets/images/skeletal.png', cardWidth, () {
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => SkeletalSystem()), // Navigate to Female Reproductive screen
+    );
+    }),
+    _buildCard('assets/images/lymphatic.png', cardWidth, () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LymphaticSystem()), // Navigate to Female Reproductive screen
+      );
+    }),
     ];
   }
 

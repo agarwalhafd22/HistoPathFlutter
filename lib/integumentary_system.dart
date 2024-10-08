@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
-import 'uterus_quiz.dart'; // Import the UterusQuiz class
-import 'uterus.dart';
 
-class FemaleReproductiveSystem extends StatefulWidget {
+class IntegumentarySystem extends StatefulWidget {
   @override
-  _FemaleReproductiveSystemState createState() => _FemaleReproductiveSystemState();
+  _IntegumentarySystemState createState() => _IntegumentarySystemState();
 }
 
-class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
+class _IntegumentarySystemState extends State<IntegumentarySystem> {
   bool isQuizVisible = false;
   bool isNextVisible = false;
   String selectedTopic = "";
@@ -34,18 +32,18 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
     });
   }
 
-  void _goToQuiz(BuildContext context) {
-    if (selectedTopic == "Uterus") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => UterusQuiz()), // Navigate to UterusQuiz
-      );
-    } else if (selectedTopic == "Breast") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => BreastQuiz()), // Replace with your BreastQuiz page
-      );
+  void _goToQuiz() {
+    if (selectedTopic == "Thin Skin") {
+      // Navigate to colonQuiz
     }
+    else if (selectedTopic == "Thick Skin") {
+      // Navigate to appendixQuiz
+    }
+    // else if (selectedTopic == "Liver") {
+    //   // Navigate to liverQuiz
+    // } else if (selectedTopic == "Large Intestine") {
+    //   // Navigate to largeIntestineQuiz
+    // }
   }
 
   @override
@@ -54,7 +52,7 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: Text(
-          "Female Reproductive System",
+          "Integumentary System",
           style: TextStyle(color: Colors.white),
         ),
         automaticallyImplyLeading: false,
@@ -67,8 +65,8 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center, // Center content horizontally
+                    mainAxisAlignment: MainAxisAlignment.start, // Start content below the AppBar
                     children: [
                       SizedBox(height: 20),
                       Wrap(
@@ -76,13 +74,8 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
                         spacing: 16.0,
                         runSpacing: 16.0,
                         children: [
-                          _buildCard("Uterus", () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Uterus()), // Navigate to Uterus
-                            );
-                          }, 'assets/images/uterus.jpg'),
-                          _buildCard("Breast", () => _selectTopic("Breast"), 'assets/images/breast.jpg'),
+                          _buildCard("Thin Skin", () => _selectTopic("Thin Skin"), "assets/images/thinskin.jpg"),
+                          _buildCard("Thick Skin", () => _selectTopic("Thick Skin"), "assets/images/thickskin.jpg"),
                         ],
                       ),
                     ],
@@ -120,7 +113,7 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
                             ),
                             SizedBox(height: 10),
                             GroupButton(
-                              buttons: ["Uterus", "Breast"],
+                              buttons: ["Thin Skin", "Thick Skin"],
                               onSelected: (String label, int index, bool isSelected) {
                                 if (isSelected) {
                                   _selectTopic(label);
@@ -138,7 +131,7 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
                                 ),
                                 if (isNextVisible)
                                   TextButton(
-                                    onPressed: () => _goToQuiz(context),
+                                    onPressed: _goToQuiz,
                                     child: Text("Next"),
                                   ),
                               ],
@@ -175,7 +168,7 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
         ),
         elevation: 8,
         child: Container(
-          width: 140,
+          width: 140, // Slightly reduced size
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -183,7 +176,7 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 child: Image.asset(
                   imagePath,
-                  height: 100,
+                  height: 100, // Slightly reduced size
                   fit: BoxFit.cover,
                 ),
               ),
@@ -200,17 +193,6 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
           ),
         ),
       ),
-    );
-  }
-}
-
-// Placeholder classes for quizzes
-class BreastQuiz extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Breast Quiz")),
-      body: Center(child: Text("Breast Quiz Content")),
     );
   }
 }

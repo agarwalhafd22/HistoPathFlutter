@@ -29,9 +29,9 @@ class _CreateQuizState extends State<CreateQuiz> {
   Future<void> _pickImage(int questionIndex) async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      String imageUrl = await _uploadImage(File(image.path));
+      // Save the image path instead of uploading it immediately
       setState(() {
-        _questions[questionIndex]['imagePath'] = imageUrl; // Save the URL instead of the path
+        _questions[questionIndex]['imagePath'] = image.path; // Store the local file path
       });
     }
   }
@@ -149,7 +149,7 @@ class _CreateQuizState extends State<CreateQuiz> {
         'date': _selectedDate?.toIso8601String(),
         'time': _selectedTime?.format(context),
       },
-      'questions': _questions,
+      'questions': [], // Initialize an empty list for questions
       'teacherName': teacherName, // Use the retrieved teacher's name
       'teacherEmail': user.email,
       'createdAt': DateTime.now(), // Store the current date and time
@@ -158,6 +158,15 @@ class _CreateQuizState extends State<CreateQuiz> {
     try {
       // Log quiz data before saving
       print('Quiz Data: $quizData');
+
+      // Loop through questions and upload images if they exist
+      for (var question in _questions) {
+        if (question['imagePath'] != null) {
+          String imageUrl = await _uploadImage(File(question['imagePath'])); // Upload image
+          question['imagePath'] = imageUrl; // Save the URL
+        }
+        quizData['questions'].add(question); // Add question to quiz data
+      }
 
       // Add the quiz data to Firestore
       await quizzes.add(quizData);
@@ -237,67 +246,60 @@ class _CreateQuizState extends State<CreateQuiz> {
                   return Card(
                     margin: EdgeInsets.symmetric(vertical: 8.0),
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextField(
+                            decoration: InputDecoration(labelText: 'Question ${index + 1}'),
                             onChanged: (value) {
                               _questions[index]['question'] = value;
                             },
-                            decoration: InputDecoration(labelText: 'Question ${index + 1}'),
                           ),
-                          SizedBox(height: 10),
                           TextField(
+                            decoration: InputDecoration(labelText: 'Option A'),
                             onChanged: (value) {
                               _questions[index]['options'][0] = value;
                             },
-                            decoration: InputDecoration(labelText: 'Option 1'),
                           ),
                           TextField(
+                            decoration: InputDecoration(labelText: 'Option B'),
                             onChanged: (value) {
                               _questions[index]['options'][1] = value;
                             },
-                            decoration: InputDecoration(labelText: 'Option 2'),
                           ),
                           TextField(
+                            decoration: InputDecoration(labelText: 'Option C'),
                             onChanged: (value) {
                               _questions[index]['options'][2] = value;
                             },
-                            decoration: InputDecoration(labelText: 'Option 3'),
                           ),
                           TextField(
+                            decoration: InputDecoration(labelText: 'Option D'),
                             onChanged: (value) {
                               _questions[index]['options'][3] = value;
                             },
-                            decoration: InputDecoration(labelText: 'Option 4'),
                           ),
                           TextField(
+                            decoration: InputDecoration(labelText: 'Correct Answer'),
                             onChanged: (value) {
                               _questions[index]['correctAnswer'] = value;
                             },
-                            decoration: InputDecoration(labelText: 'Correct Answer'),
                           ),
-                          SizedBox(height: 10),
-                          // Add image upload button
                           ElevatedButton(
-                            onPressed: () => _pickImage(index),
-                            child: Text('Upload Image'),
+                            onPressed: () => _pickImage(index), // Modify to pass index
+                            child: Text('Pick Image'),
                           ),
-                          if (_questions[index]['imagePath'] != null)
-                            Column(
-                              children: [
-                                // Show image preview
-                                SizedBox(height: 10),
-                                Image.network(
-                                  _questions[index]['imagePath'], // Use Image.network to display the image
-                                  height: 100, // Set a height for the image preview
-                                  width: 100, // Set a width for the image preview
-                                  fit: BoxFit.cover, // Cover the space appropriately
-                                ),
-                                // Text('Image Uploaded: ${_questions[index]['imagePath']}'), // Show uploaded image URL
-                              ],
-                            ),
+                          SizedBox(height: 8.0),
+                          // Display image preview if available
+                          _questions[index]['imagePath'] != null
+                              ? Image.file(
+                            File(_questions[index]['imagePath']),
+                            height: 400,
+                            width: 400,
+                            fit: BoxFit.cover,
+                          )
+                              : Container(),
                           SizedBox(height: 10),
                           IconButton(
                             icon: Icon(Icons.delete, color: Colors.red),
@@ -312,12 +314,27 @@ class _CreateQuizState extends State<CreateQuiz> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _addQuestion,
-                child: Text('Add Question'),
+                child: Text(
+                  'Add Question',
+                  style: TextStyle(color: Colors.white), // Change text color to white
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red, // Button background color
+                  foregroundColor: Colors.white, // Button text color
+                ),
               ),
+
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveQuiz,
-                child: Text('Save Quiz'),
+                child: Text(
+                  'Save Quiz',
+                  style: TextStyle(color: Colors.white), // Change text color to white
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red, // Button background color
+                  foregroundColor: Colors.white, // Button text color
+                ),
               ),
             ],
           ),

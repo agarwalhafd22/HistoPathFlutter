@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class QuizDetails extends StatefulWidget {
   final String quizId;
@@ -12,6 +14,10 @@ class QuizDetails extends StatefulWidget {
 
 class _QuizDetailsState extends State<QuizDetails> {
   TextEditingController _titleController = TextEditingController();
+  TextEditingController _timeAllottedController = TextEditingController();
+  TextEditingController _availabilityDateController = TextEditingController();
+  TextEditingController _availabilityTimeController = TextEditingController();
+
   List<Map<String, dynamic>> _questions = [];
   List<TextEditingController> _questionControllers = [];
   List<List<TextEditingController>> _optionControllers = [];
@@ -36,6 +42,9 @@ class _QuizDetailsState extends State<QuizDetails> {
         setState(() {
           _titleController.text = quizData['title'];
           _questions = List<Map<String, dynamic>>.from(quizData['questions']);
+          _timeAllottedController.text = quizData['timeAllotted'].toString();
+          _availabilityDateController.text = quizData['availability']['date'];
+          _availabilityTimeController.text = quizData['availability']['time'];
 
           // Initialize controllers for questions, options, and correct answers
           _questionControllers = _questions.map((q) => TextEditingController(text: q['question'])).toList();
@@ -62,8 +71,7 @@ class _QuizDetailsState extends State<QuizDetails> {
           'question': _questionControllers[i].text,
           'options': _optionControllers[i].map((controller) => controller.text).toList(),
           'correctAnswer': _correctAnswerControllers[i].text,
-          // Add the imagePath to the updated question
-          'imagePath': _questions[i]['imagePath'],
+          'imagePath': _questions[i]['imagePath'], // Keep image path
         });
       }
 
@@ -71,6 +79,11 @@ class _QuizDetailsState extends State<QuizDetails> {
       await FirebaseFirestore.instance.collection('quizzes').doc(widget.quizId).update({
         'title': _titleController.text,
         'questions': updatedQuestions,
+        'timeAllotted': int.tryParse(_timeAllottedController.text) ?? 0, // Save time allotted
+        'availability': {
+          'date': _availabilityDateController.text,
+          'time': _availabilityTimeController.text,
+        },
       });
 
       // Show success message
@@ -82,6 +95,91 @@ class _QuizDetailsState extends State<QuizDetails> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update quiz.')),
       );
+    }
+  }
+
+  Future<void> _deleteQuiz() async {
+    // Show confirmation dialog
+    bool confirm = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete Quiz'),
+        content: Text('This action is not reversible. Are you sure you want to delete this quiz?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    ) ?? false;
+
+    if (confirm) {
+      try {
+        // Fetch the quiz data to get the image path
+        DocumentSnapshot quizSnapshot = await FirebaseFirestore.instance
+            .collection('quizzes')
+            .doc(widget.quizId)
+            .get();
+
+        if (quizSnapshot.exists) {
+          Map<String, dynamic> quizData = quizSnapshot.data() as Map<String, dynamic>;
+          String imagePath = quizData['questions'][0]['imagePath']; // Assuming you want to delete the first image
+
+          // Delete the image from Firebase Storage
+          if (imagePath.isNotEmpty) {
+            await FirebaseStorage.instance.refFromURL(imagePath).delete();
+          }
+
+          // Delete the quiz document from Firestore
+          await FirebaseFirestore.instance.collection('quizzes').doc(widget.quizId).delete();
+
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Quiz deleted successfully!')),
+          );
+
+          // Navigate back or close the screen
+          Navigator.of(context).pop();
+        }
+      } catch (e) {
+        print('Error deleting quiz: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete quiz.')),
+        );
+      }
+    }
+  }
+
+  // Method to pick a date for availability
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        _availabilityDateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+      });
+    }
+  }
+
+  // Method to pick a time for availability
+  Future<void> _selectTime(BuildContext context) async {
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      setState(() {
+        _availabilityTimeController.text = pickedTime.format(context);
+      });
     }
   }
 
@@ -106,6 +204,43 @@ class _QuizDetailsState extends State<QuizDetails> {
                 decoration: InputDecoration(labelText: 'Quiz Title'),
               ),
               SizedBox(height: 20),
+
+              // Time Allotted Field
+              TextField(
+                controller: _timeAllottedController,
+                decoration: InputDecoration(labelText: 'Time Allotted (in minutes)'),
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 20),
+
+              // Availability Date Field
+              TextField(
+                controller: _availabilityDateController,
+                decoration: InputDecoration(
+                  labelText: 'Availability Date',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    onPressed: () => _selectDate(context),
+                  ),
+                ),
+                readOnly: true,
+              ),
+              SizedBox(height: 20),
+
+              // Availability Time Field
+              TextField(
+                controller: _availabilityTimeController,
+                decoration: InputDecoration(
+                  labelText: 'Availability Time',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.access_time),
+                    onPressed: () => _selectTime(context),
+                  ),
+                ),
+                readOnly: true,
+              ),
+              SizedBox(height: 20),
+
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -143,50 +278,39 @@ class _QuizDetailsState extends State<QuizDetails> {
                           SizedBox(height: 10),
                           // Display image for the question
                           if (_questions[index]['imagePath'] != null)
-                            Column(
-                              children: [
-                                Image.network(
-                                  _questions[index]['imagePath'], // Fetch image from Firestore
-                                  height: 100, // Set a height for the image preview
-                                  width: 100, // Set a width for the image preview
-                                  fit: BoxFit.cover, // Cover the space appropriately
-                                ),
-                                SizedBox(height: 5),
-                                // Text('Image URL: ${_questions[index]['imagePath']}'), // Show uploaded image URL
-                              ],
-                            ),
+                            Image.network(_questions[index]['imagePath']),
                         ],
                       ),
                     ),
                   );
                 },
               ),
+
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveChanges,
                 child: Text(
                   'Save Changes',
-                  style: TextStyle(color: Colors.white), // Sets font color to white
+                  style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
                 ),
               ),
-              SizedBox(height: 10), // Space between buttons
+              SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // No functionality yet
-                },
+                onPressed: _deleteQuiz,
                 child: Text(
-                  'Deploy',
-                  style: TextStyle(color: Colors.white), // White font color
+                  'Delete Quiz',
+                  style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  backgroundColor: Colors.red, // Red background color
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
                 ),
               ),
+              SizedBox(height: 20),
             ],
           ),
         ),

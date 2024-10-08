@@ -1,26 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:flutter_prevent_screenshot/disablescreenshot.dart';
 
-import 'large_intestine.dart';
-
-class GastroIntSystem extends StatefulWidget {
+class LymphaticSystem extends StatefulWidget {
   @override
-  _GastroIntSystemState createState() => _GastroIntSystemState();
+  _LymphaticSystemState createState() => _LymphaticSystemState();
 }
 
-class _GastroIntSystemState extends State<GastroIntSystem> {
+class _LymphaticSystemState extends State<LymphaticSystem> {
   bool isQuizVisible = false;
   bool isNextVisible = false;
   String selectedTopic = "";
-
-  @override
-  void initState(){
-    super.initState();
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-    FlutterPreventScreenshot.instance.screenshotOff();
-  }
 
   void _showQuizOptions() {
     setState(() {
@@ -46,12 +35,29 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
   void _goToQuiz() {
     if (selectedTopic == "Colon") {
       // Navigate to colonQuiz
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => ColonQuiz()), // Replace with your ColonQuiz page
+      // );
     } else if (selectedTopic == "Appendix") {
       // Navigate to appendixQuiz
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => AppendixQuiz()), // Replace with your AppendixQuiz page
+      // );
     } else if (selectedTopic == "Liver") {
       // Navigate to liverQuiz
-    } else if (selectedTopic == "Large Intestine") {
-      // Navigate to largeIntestineQuiz
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => LiverQuiz()), // Replace with your LiverQuiz page
+      // );
+    }
+    else if (selectedTopic == "Large Intestine") {
+      // Navigate to liverQuiz
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => LargeIntestineQuiz()), // Replace with your LiverQuiz page
+      // );
     }
   }
 
@@ -59,59 +65,54 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.red, // Set the AppBar background color to red
         title: Text(
-          "Gastrointestinal System",
-          style: TextStyle(color: Colors.white),
+          "Lymphatic System", // Set the AppBar title
+          style: TextStyle(color: Colors.white), // Set the title color to white
         ),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false, // Remove the back arrow
       ),
       body: Stack(
         children: [
           LayoutBuilder(
             builder: (context, constraints) {
               return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center, // Center content horizontally
-                    mainAxisAlignment: MainAxisAlignment.start, // Start content below the AppBar
-                    children: [
-                      SizedBox(height: 20),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 16.0,
-                        runSpacing: 16.0,
-                        children: [
-                          _buildCard("Large Intestine", () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => LargeIntestine()), // Navigate to Colon
-                            );
-                          }, 'assets/images/largeintestine.jpg'),
-                          _buildCard("Appendix", () => _selectTopic("Appendix"), "assets/images/appendix.jpeg"),
-                          _buildCard("Liver", () => _selectTopic("Liver"), "assets/images/liver.jpg"),
-                        ],
-                      ),
-                    ],
-                  ),
+                padding: const EdgeInsets.all(16.0), // Add padding to the body
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center, // Center align items
+                  children: [
+                    SizedBox(height: 0), // Add space from the top
+                    Wrap(
+                      alignment: WrapAlignment.center, // Align all items to the center
+                      spacing: 16.0, // Horizontal space between cards
+                      runSpacing: 16.0, // Vertical space between rows
+                      children: [
+                        _buildCard("Colon", () => _selectTopic("Colon"), "assets/images/colon.jpg"),
+                        _buildCard("Appendix", () => _selectTopic("Appendix"), "assets/images/appendix.jpeg"),
+                        _buildCard("Liver", () => _selectTopic("Liver"), "assets/images/liver.jpg"),
+                        _buildCard("Large Intestine", () => _selectTopic("Large Intestine"), "assets/images/largeintestine.jpg"),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                  ],
                 ),
               );
             },
           ),
-          if (isQuizVisible)
+          if (isQuizVisible) // Show overlay if quiz options are visible
             Container(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withOpacity(0.7), // White background with 70% opacity
               child: Center(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
+                    // Determine the width based on orientation
                     double cardWidth;
                     bool isLandscapeOrWebView = constraints.maxWidth > constraints.maxHeight;
 
                     if (isLandscapeOrWebView) {
-                      cardWidth = constraints.maxWidth * 0.35;
+                      cardWidth = constraints.maxWidth * 0.35; // 35% width for landscape/web
                     } else {
-                      cardWidth = constraints.maxWidth * 0.90;
+                      cardWidth = constraints.maxWidth * 0.90; // 90% width for portrait
                     }
 
                     return Card(
@@ -128,13 +129,13 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
                             ),
                             SizedBox(height: 10),
                             GroupButton(
-                              buttons: ["Colon", "Appendix", "Liver", "Large Intestine"],
+                              buttons: ["Colon", "Appendix", "Liver", "Large Intestine"], // Define the options
                               onSelected: (String label, int index, bool isSelected) {
                                 if (isSelected) {
-                                  _selectTopic(label);
+                                  _selectTopic(label); // Update the selected topic
                                 }
                               },
-                              isRadio: true,
+                              isRadio: true, // Toggle buttons will act as radio buttons
                             ),
                             SizedBox(height: 20),
                             Row(
@@ -163,13 +164,13 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showQuizOptions,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.red, // Set background color to red
         child: Text(
           "Quiz",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white), // Set text color to white
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Position at the bottom right corner
     );
   }
 
@@ -183,26 +184,20 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
         ),
         elevation: 8,
         child: Container(
-          width: 140, // Slightly reduced size
+          width: 120, // Card width
+          padding: const EdgeInsets.all(8.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                child: Image.asset(
-                  imagePath,
-                  height: 100, // Slightly reduced size
-                  fit: BoxFit.cover,
-                ),
+              Text(
+                title,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
+              Image.asset(
+                imagePath, // Use the provided image path
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
               ),
             ],
           ),
