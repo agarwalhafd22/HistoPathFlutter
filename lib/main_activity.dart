@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth
-import 'package:firebase_database/firebase_database.dart'; // Import FirebaseDatabase
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_histo_path/endocrine_system.dart';
 import 'package:flutter_histo_path/integumentary_system.dart';
@@ -9,12 +9,12 @@ import 'package:flutter_histo_path/renal_system.dart';
 import 'package:flutter_histo_path/skeletal_system.dart';
 import 'package:flutter_histo_path/student_quizzes.dart';
 import 'package:flutter_histo_path/vascular_system.dart';
-import 'student_login.dart'; // Import StudentLogin page to redirect after logout
-import 'update_profile.dart'; // Import UpdateProfile page
-import 'package:flutter/foundation.dart'; // Import kIsWeb
-import 'gastro_int_system.dart'; // Import the screen for Gastrointestinal
-import 'female_reproductive_system.dart'; // Import the screen for Female Reproductive
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'student_login.dart';
+import 'update_profile.dart';
+import 'package:flutter/foundation.dart';
+import 'gastro_int_system.dart';
+import 'female_reproductive_system.dart';
+// import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 class MainActivity extends StatefulWidget {
   @override
@@ -23,65 +23,65 @@ class MainActivity extends StatefulWidget {
 
 class _MainActivityState extends State<MainActivity> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String accountName = 'User Name'; // Default name
-  String accountEmail = 'user@example.com'; // Default email
+  String accountName = 'User Name';
+  String accountEmail = 'user@example.com';
   late DatabaseReference _userRef;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserData();// Fetch user data when the widget is initialized
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    _fetchUserData();
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
 
   Future<void> _fetchUserData() async {
-    User? user = FirebaseAuth.instance.currentUser; // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      String userEmail = user.email!; // Get the user's email
+      String userEmail = user.email!;
       DatabaseReference studentRef = FirebaseDatabase.instance.ref('StudentDB');
       DatabaseReference teacherRef = FirebaseDatabase.instance.ref('TeacherDB');
 
-      // Check StudentDB
+
       DatabaseEvent studentEvent = await studentRef.child(userEmail.replaceAll('.', ',')).once();
       if (studentEvent.snapshot.value != null) {
         final data = studentEvent.snapshot.value as Map<dynamic, dynamic>;
         setState(() {
-          accountName = data['name']; // Replace with actual field name for name
-          accountEmail = data['email']; // Replace with actual field name for email
+          accountName = data['name'];
+          accountEmail = data['email'];
         });
-        _userRef = studentRef.child(userEmail.replaceAll('.', ',')); // Reference for real-time updates
-        _listenForUserUpdates(); // Start listening for updates
+        _userRef = studentRef.child(userEmail.replaceAll('.', ','));
+        _listenForUserUpdates();
       } else {
-        // If not found in StudentDB, check TeacherDB
+
         DatabaseEvent teacherEvent = await teacherRef.child(userEmail.replaceAll('.', ',')).once();
         if (teacherEvent.snapshot.value != null) {
           final data = teacherEvent.snapshot.value as Map<dynamic, dynamic>;
           setState(() {
-            accountName = data['name']; // Replace with actual field name for name
-            accountEmail = data['email']; // Replace with actual field name for email
+            accountName = data['name'];
+            accountEmail = data['email'];
           });
-          _userRef = teacherRef.child(userEmail.replaceAll('.', ',')); // Reference for real-time updates
-          _listenForUserUpdates(); // Start listening for updates
+          _userRef = teacherRef.child(userEmail.replaceAll('.', ','));
+          _listenForUserUpdates();
         }
       }
     }
   }
 
   Future<void> _listenForUserUpdates() async {
-    // Listen for changes to user profile data
+
     _userRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
         final data = event.snapshot.value as Map<dynamic, dynamic>;
         setState(() {
-          accountName = data['name']; // Update account name
-          accountEmail = data['email']; // Update account email if necessary
+          accountName = data['name'];
+          accountEmail = data['email'];
         });
       }
     });
   }
 
-  // Callback function to update account name
+
   void _updateAccountName(String newName) {
     setState(() {
       accountName = newName;
@@ -90,7 +90,7 @@ class _MainActivityState extends State<MainActivity> {
 
   @override
   Widget build(BuildContext context) {
-    // Use MediaQuery to get the screen width and orientation
+
     final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final isWeb = kIsWeb; // Checks if it's a web platform
 
@@ -106,24 +106,24 @@ class _MainActivityState extends State<MainActivity> {
           IconButton(
             icon: Icon(Icons.notifications),
             onPressed: () {
-              // Add functionality for notifications here, like navigating to a notifications screen
+
             },
           ),
         ],
       ),
       drawer: Drawer(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes content to top and bottom
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column( // This Column contains all the options except Logout
+            Column(
               children: [
                 UserAccountsDrawerHeader(
-                  accountEmail: Text(accountEmail), // Use fetched email
-                  accountName: Text(accountName), // Use fetched name
+                  accountEmail: Text(accountEmail),
+                  accountName: Text(accountName),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.white,
                     child: Text(
-                      accountName.isNotEmpty ? accountName[0] : 'U', // Display first letter of name
+                      accountName.isNotEmpty ? accountName[0] : 'U',
                       style: TextStyle(fontSize: 40.0),
                     ),
                   ),
@@ -138,13 +138,13 @@ class _MainActivityState extends State<MainActivity> {
                     );
                   },
                 ),
-                ListTile(
-                  leading: Icon(Icons.inbox), // Add Inbox icon
-                  title: Text('Inbox'), // Title for the Inbox
-                  onTap: () {
-                    // Navigate to InboxScreen
-                  },
-                ),
+                // ListTile(
+                //   leading: Icon(Icons.inbox),
+                //   title: Text('Inbox'),
+                //   onTap: () {
+                //
+                //   },
+                // ),
                 ListTile(
                   leading: Icon(Icons.person),
                   title: Text('Update Profile'),
@@ -162,7 +162,7 @@ class _MainActivityState extends State<MainActivity> {
             ListTile(
               leading: Icon(Icons.logout),
               title: Text('Logout'),
-              onTap: () => _logout(context), // Call the _logout method when tapped
+              onTap: () => _logout(context),
             ),
           ],
         ),
@@ -174,73 +174,73 @@ class _MainActivityState extends State<MainActivity> {
             builder: (context, constraints) {
               double cardWidth;
 
-              // Adjust card width based on the screen size and orientation
+
               if (isWeb) {
-                cardWidth = constraints.maxWidth * 0.2; // For web, narrow cards
+                cardWidth = constraints.maxWidth * 0.2;
               } else if (isLandscape) {
-                cardWidth = constraints.maxWidth * 0.35; // For landscape
+                cardWidth = constraints.maxWidth * 0.35;
               } else {
-                cardWidth = constraints.maxWidth * 0.9; // For portrait
+                cardWidth = constraints.maxWidth * 0.9;
               }
 
-              return Center( // Center the Wrap
+              return Center(
                 child: Wrap(
-                  alignment: WrapAlignment.center, // Center cards horizontally
-                  spacing: 10, // Space between cards
-                  runSpacing: 10, // Space between rows of cards
+                  alignment: WrapAlignment.center,
+                  spacing: 10,
+                  runSpacing: 10,
                   children: [
                     _buildCard('assets/images/gastroint.png', cardWidth, () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => GastroIntSystem()), // Navigate to Gastrointestinal screen
+                        MaterialPageRoute(builder: (context) => GastroIntSystem()),
                       );
                     }),
                     _buildCard('assets/images/renalbg.png', cardWidth, () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => RenalSystem()), // Navigate to Gastrointestinal screen
+                        MaterialPageRoute(builder: (context) => RenalSystem()),
                       );
                     }),
                     _buildCard('assets/images/femalers.png', cardWidth, () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => FemaleReproductiveSystem()), // Navigate to Female Reproductive screen
+                        MaterialPageRoute(builder: (context) => FemaleReproductiveSystem()),
                       );
                     }),
                     _buildCard('assets/images/endocrine.png', cardWidth, () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => EndocrineSystem()), // Navigate to Female Reproductive screen
+                        MaterialPageRoute(builder: (context) => EndocrineSystem()),
                       );
                     }),
                     _buildCard('assets/images/integumentary.png', cardWidth, () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => IntegumentarySystem()), // Navigate to Female Reproductive screen
+                        MaterialPageRoute(builder: (context) => IntegumentarySystem()),
                       );
                     }),
                     _buildCard('assets/images/vascular.png', cardWidth, () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => VascularSystem()), // Navigate to Female Reproductive screen
+                        MaterialPageRoute(builder: (context) => VascularSystem()),
                       );
                     }),
                     _buildCard('assets/images/malers.png', cardWidth, () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MaleReproductiveSystem()), // Navigate to Female Reproductive screen
+                        MaterialPageRoute(builder: (context) => MaleReproductiveSystem()),
                       );
                     }),
                     _buildCard('assets/images/skeletal.png', cardWidth, () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SkeletalSystem()), // Navigate to Female Reproductive screen
+                        MaterialPageRoute(builder: (context) => SkeletalSystem()),
                       );
                     }),
                     _buildCard('assets/images/lymphatic.png', cardWidth, () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LymphaticSystem()), // Navigate to Female Reproductive screen
+                        MaterialPageRoute(builder: (context) => LymphaticSystem()),
                       );
                     }),
                   ],
@@ -255,7 +255,7 @@ class _MainActivityState extends State<MainActivity> {
 
   Widget _buildCard(String imagePath, double cardWidth, VoidCallback onTap) {
     return GestureDetector(
-      onTap: onTap, // Call the onTap function passed as a parameter
+      onTap: onTap,
       child: Card(
         margin: EdgeInsets.symmetric(vertical: 10.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -264,9 +264,9 @@ class _MainActivityState extends State<MainActivity> {
           borderRadius: BorderRadius.circular(15),
           child: Image.asset(
             imagePath,
-            fit: BoxFit.fill, // Fill the card completely with the image without white spaces
+            fit: BoxFit.fill,
             height: 150,
-            width: cardWidth, // Use calculated card width
+            width: cardWidth,
           ),
         ),
       ),
@@ -276,16 +276,15 @@ class _MainActivityState extends State<MainActivity> {
   // Logout method
   void _logout(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.signOut(); // Sign out from FirebaseAuth
+      await FirebaseAuth.instance.signOut();
 
-      // After logout, navigate to StudentLogin page and clear the navigation stack
+
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => StudentLogin()),
             (Route<dynamic> route) => false,
       );
     } catch (e) {
-      // Handle any errors during logout (optional)
       print('Logout failed: $e');
     }
   }

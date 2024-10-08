@@ -1,15 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart'; // For Firebase Realtime Database
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart'; // For displaying toast messages
-import 'package:flutter/scheduler.dart'; // Import for SchedulerBinding
-import 'teacher_login.dart'; // Import the TeacherLogin screen
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/scheduler.dart';
+import 'teacher_login.dart';
 import 'student_sign_up.dart';
 import 'main_activity.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,13 +22,7 @@ Future main() async {
       storageBucket: "gs://histopathflutter-ba362.appspot.com",
     ),
   );
-
-  await _preventScreenshots();
   runApp(MyApp());
-}
-
-Future<void> _preventScreenshots() async {
-  await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
 }
 
 class MyApp extends StatelessWidget {
@@ -42,7 +34,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       debugShowCheckedModeBanner: false,
-      home: StudentLogin(), // Set the initial screen here
+      home: StudentLogin(),
     );
   }
 }
@@ -145,7 +137,6 @@ class _StudentLoginState extends State<StudentLogin> {
               SizedBox(height: 16),
               TextButton(
                 onPressed: () {
-                  // Navigate to TeacherLogin screen
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => TeacherLogin()),
@@ -178,24 +169,18 @@ class _StudentLoginState extends State<StudentLogin> {
     try {
       String email = _emailController.text;
       String password = _passwordController.text;
-
-      // Sanitize email by replacing '.' with ',' to match the database structure
       String sanitizedEmail = email.replaceAll('.', ',');
 
-      // Sign in with Firebase Authentication
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Check if the user exists in StudentDB in the Realtime Database
       DatabaseReference studentRef = FirebaseDatabase.instance.ref().child('StudentDB').child(sanitizedEmail);
-      DatabaseEvent event = await studentRef.once(); // Fetch student data once
+      DatabaseEvent event = await studentRef.once();
 
       if (event.snapshot.exists) {
-        // User exists in StudentDB, login is successful
         showToast(message: "Login successful", backgroundColor: Colors.green);
-        // Use SchedulerBinding to navigate after the current frame
         SchedulerBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacement(
             context,
@@ -203,12 +188,10 @@ class _StudentLoginState extends State<StudentLogin> {
           );
         });
       } else {
-        // User does not exist in StudentDB, logout the user
         await _auth.signOut();
         showToast(message: "Login failed: No student record found", backgroundColor: Colors.red);
       }
     } catch (e) {
-      // If login fails, show an error message
       showToast(message: "Login failed: ${e.toString()}", backgroundColor: Colors.red);
     } finally {
       setState(() {
@@ -217,7 +200,6 @@ class _StudentLoginState extends State<StudentLogin> {
     }
   }
 
-  // Toast helper method using fluttertoast
   void showToast({required String message, Color? backgroundColor}) {
     Fluttertoast.showToast(
       msg: message,

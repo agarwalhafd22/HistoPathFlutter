@@ -59,8 +59,8 @@ class _RenalSystemState extends State<RenalSystem> {
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center, // Center content horizontally
-                    mainAxisAlignment: MainAxisAlignment.start, // Start content below the AppBar
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(height: 20),
                       Wrap(
@@ -162,7 +162,7 @@ class _RenalSystemState extends State<RenalSystem> {
         ),
         elevation: 8,
         child: Container(
-          width: 140, // Slightly reduced size
+          width: 140,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -170,7 +170,7 @@ class _RenalSystemState extends State<RenalSystem> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 child: Image.asset(
                   imagePath,
-                  height: 100, // Slightly reduced size
+                  height: 100,
                   fit: BoxFit.cover,
                 ),
               ),

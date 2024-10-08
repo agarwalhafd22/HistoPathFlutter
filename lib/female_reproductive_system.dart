@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
-import 'uterus_quiz.dart'; // Import the UterusQuiz class
+import 'uterus_quiz.dart';
 import 'uterus.dart';
 
 class FemaleReproductiveSystem extends StatefulWidget {
@@ -38,12 +38,12 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
     if (selectedTopic == "Uterus") {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UterusQuiz()), // Navigate to UterusQuiz
+        MaterialPageRoute(builder: (context) => UterusQuiz()),
       );
     } else if (selectedTopic == "Breast") {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => BreastQuiz()), // Replace with your BreastQuiz page
+        MaterialPageRoute(builder: (context) => BreastQuiz()),
       );
     }
   }
@@ -79,7 +79,7 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
                           _buildCard("Uterus", () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Uterus()), // Navigate to Uterus
+                              MaterialPageRoute(builder: (context) => Uterus()),
                             );
                           }, 'assets/images/uterus.jpg'),
                           _buildCard("Breast", () => _selectTopic("Breast"), 'assets/images/breast.jpg'),
@@ -204,7 +204,6 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
   }
 }
 
-// Placeholder classes for quizzes
 class BreastQuiz extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

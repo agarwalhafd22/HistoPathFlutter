@@ -34,16 +34,10 @@ class _IntegumentarySystemState extends State<IntegumentarySystem> {
 
   void _goToQuiz() {
     if (selectedTopic == "Thin Skin") {
-      // Navigate to colonQuiz
+      // Navigate to Thin Skin quiz
+    } else if (selectedTopic == "Thick Skin") {
+      // Navigate to Thick Skin quiz
     }
-    else if (selectedTopic == "Thick Skin") {
-      // Navigate to appendixQuiz
-    }
-    // else if (selectedTopic == "Liver") {
-    //   // Navigate to liverQuiz
-    // } else if (selectedTopic == "Large Intestine") {
-    //   // Navigate to largeIntestineQuiz
-    // }
   }
 
   @override
@@ -65,8 +59,8 @@ class _IntegumentarySystemState extends State<IntegumentarySystem> {
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center, // Center content horizontally
-                    mainAxisAlignment: MainAxisAlignment.start, // Start content below the AppBar
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(height: 20),
                       Wrap(
@@ -168,7 +162,7 @@ class _IntegumentarySystemState extends State<IntegumentarySystem> {
         ),
         elevation: 8,
         child: Container(
-          width: 140, // Slightly reduced size
+          width: 140,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -176,7 +170,7 @@ class _IntegumentarySystemState extends State<IntegumentarySystem> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 child: Image.asset(
                   imagePath,
-                  height: 100, // Slightly reduced size
+                  height: 100,
                   fit: BoxFit.cover,
                 ),
               ),

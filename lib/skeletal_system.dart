@@ -34,30 +34,9 @@ class _SkeletalSystemState extends State<SkeletalSystem> {
 
   void _goToQuiz() {
     if (selectedTopic == "Colon") {
-      // Navigate to colonQuiz
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ColonQuiz()), // Replace with your ColonQuiz page
-      // );
     } else if (selectedTopic == "Appendix") {
-      // Navigate to appendixQuiz
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => AppendixQuiz()), // Replace with your AppendixQuiz page
-      // );
     } else if (selectedTopic == "Liver") {
-      // Navigate to liverQuiz
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => LiverQuiz()), // Replace with your LiverQuiz page
-      // );
-    }
-    else if (selectedTopic == "Large Intestine") {
-      // Navigate to liverQuiz
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => LargeIntestineQuiz()), // Replace with your LiverQuiz page
-      // );
+    } else if (selectedTopic == "Large Intestine") {
     }
   }
 
@@ -65,27 +44,27 @@ class _SkeletalSystemState extends State<SkeletalSystem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red, // Set the AppBar background color to red
+        backgroundColor: Colors.red,
         title: Text(
-          "Skeletal System", // Set the AppBar title
-          style: TextStyle(color: Colors.white), // Set the title color to white
+          "Skeletal System",
+          style: TextStyle(color: Colors.white),
         ),
-        automaticallyImplyLeading: false, // Remove the back arrow
+        automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
           LayoutBuilder(
             builder: (context, constraints) {
               return Padding(
-                padding: const EdgeInsets.all(16.0), // Add padding to the body
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center, // Center align items
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 0), // Add space from the top
+                    SizedBox(height: 0),
                     Wrap(
-                      alignment: WrapAlignment.center, // Align all items to the center
-                      spacing: 16.0, // Horizontal space between cards
-                      runSpacing: 16.0, // Vertical space between rows
+                      alignment: WrapAlignment.center,
+                      spacing: 16.0,
+                      runSpacing: 16.0,
                       children: [
                         _buildCard("Colon", () => _selectTopic("Colon"), "assets/images/colon.jpg"),
                         _buildCard("Appendix", () => _selectTopic("Appendix"), "assets/images/appendix.jpeg"),
@@ -99,20 +78,19 @@ class _SkeletalSystemState extends State<SkeletalSystem> {
               );
             },
           ),
-          if (isQuizVisible) // Show overlay if quiz options are visible
+          if (isQuizVisible)
             Container(
-              color: Colors.white.withOpacity(0.7), // White background with 70% opacity
+              color: Colors.white.withOpacity(0.7),
               child: Center(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    // Determine the width based on orientation
                     double cardWidth;
                     bool isLandscapeOrWebView = constraints.maxWidth > constraints.maxHeight;
 
                     if (isLandscapeOrWebView) {
-                      cardWidth = constraints.maxWidth * 0.35; // 35% width for landscape/web
+                      cardWidth = constraints.maxWidth * 0.35;
                     } else {
-                      cardWidth = constraints.maxWidth * 0.90; // 90% width for portrait
+                      cardWidth = constraints.maxWidth * 0.90;
                     }
 
                     return Card(
@@ -129,13 +107,13 @@ class _SkeletalSystemState extends State<SkeletalSystem> {
                             ),
                             SizedBox(height: 10),
                             GroupButton(
-                              buttons: ["Colon", "Appendix", "Liver", "Large Intestine"], // Define the options
+                              buttons: ["Colon", "Appendix", "Liver", "Large Intestine"],
                               onSelected: (String label, int index, bool isSelected) {
                                 if (isSelected) {
-                                  _selectTopic(label); // Update the selected topic
+                                  _selectTopic(label);
                                 }
                               },
-                              isRadio: true, // Toggle buttons will act as radio buttons
+                              isRadio: true,
                             ),
                             SizedBox(height: 20),
                             Row(
@@ -164,13 +142,13 @@ class _SkeletalSystemState extends State<SkeletalSystem> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showQuizOptions,
-        backgroundColor: Colors.red, // Set background color to red
+        backgroundColor: Colors.red,
         child: Text(
           "Quiz",
-          style: TextStyle(color: Colors.white), // Set text color to white
+          style: TextStyle(color: Colors.white),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Position at the bottom right corner
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -184,7 +162,7 @@ class _SkeletalSystemState extends State<SkeletalSystem> {
         ),
         elevation: 8,
         child: Container(
-          width: 120, // Card width
+          width: 120,
           padding: const EdgeInsets.all(8.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -194,7 +172,7 @@ class _SkeletalSystemState extends State<SkeletalSystem> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               Image.asset(
-                imagePath, // Use the provided image path
+                imagePath,
                 width: 100,
                 height: 100,
                 fit: BoxFit.cover,

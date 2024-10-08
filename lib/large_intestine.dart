@@ -37,9 +37,9 @@ class _LargeIntestineState extends State<LargeIntestine> {
   ];
 
   int _currentPointIndex = 0;
-  bool _isStarted = false; // Track if the process has started
+  bool _isStarted = false;
   final TransformationController _transformationController = TransformationController();
-  String _imageUrl = ""; // State variable to store the image URL
+  String _imageUrl = "";
 
   @override
   void initState() {
@@ -48,16 +48,15 @@ class _LargeIntestineState extends State<LargeIntestine> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    _loadImageFromFirebase(); // Load the image URL once
+    _loadImageFromFirebase();
   }
 
   Future<void> _loadImageFromFirebase() async {
     try {
-      // Get the download URL from Firebase Storage
       final Reference storageRef = FirebaseStorage.instance.ref().child('gastro/largeintestine/histo/GIT_Large intestine_High magnification.png');
       String downloadUrl = await storageRef.getDownloadURL();
       setState(() {
-        _imageUrl = downloadUrl; // Store the image URL in state
+        _imageUrl = downloadUrl;
       });
     } catch (e) {
       print("Error loading image: $e");
@@ -77,15 +76,12 @@ class _LargeIntestineState extends State<LargeIntestine> {
   }
 
   void _zoomToPoint(int index) {
-    final double scaleFactor = 2.0; // Scale factor for zoom
+    final double scaleFactor = 2.0;
     final double imageWidth = MediaQuery.of(context).size.width * 0.9;
     final double imageHeight = MediaQuery.of(context).size.width * 0.9;
-
-    // Calculate translation for zooming into the current point
     final double xTranslation = -points[index]['left']! * scaleFactor + (imageWidth / 2);
     final double yTranslation = -points[index]['top']! * scaleFactor + (imageHeight / 2);
 
-    // Set the transformation matrix with a delay for smooth transition
     Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
         _transformationController.value = Matrix4.identity()
@@ -115,17 +111,17 @@ class _LargeIntestineState extends State<LargeIntestine> {
 
   void _startProcess() {
     setState(() {
-      _isStarted = true; // Set started state to true
-      _currentPointIndex = 0; // Reset to the first point
+      _isStarted = true;
+      _currentPointIndex = 0;
     });
-    _zoomToPoint(_currentPointIndex); // Zoom to the first point
+    _zoomToPoint(_currentPointIndex);
   }
 
   void _finishProcess() {
     setState(() {
-      _isStarted = false; // Reset started state
-      _currentPointIndex = 0; // Reset to the first point
-      _transformationController.value = Matrix4.identity(); // Reset zoom
+      _isStarted = false;
+      _currentPointIndex = 0;
+      _transformationController.value = Matrix4.identity();
     });
   }
 
@@ -147,10 +143,10 @@ class _LargeIntestineState extends State<LargeIntestine> {
         actions: [
           Text(
             'Switch to Pathology',
-            style: TextStyle(color: Colors.white, fontSize: 20), // Same font size and color as title
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           IconButton(
-            icon: Icon(Icons.arrow_forward, color: Colors.white,),
+            icon: Icon(Icons.arrow_forward, color: Colors.white),
             onPressed: _toggleSection,
           ),
         ],
@@ -159,7 +155,6 @@ class _LargeIntestineState extends State<LargeIntestine> {
           ? Center(child: CircularProgressIndicator())
           : Column(
         children: [
-          // Top half for the image
           Expanded(
             flex: 2,
             child: Container(
@@ -178,7 +173,6 @@ class _LargeIntestineState extends State<LargeIntestine> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    // Display all points
                     ...points.map((point) {
                       final index = points.indexOf(point);
                       return Positioned(
@@ -227,7 +221,6 @@ class _LargeIntestineState extends State<LargeIntestine> {
               ),
             ),
           ),
-          // Bottom half for the description dialog
           Expanded(
             flex: 1,
             child: DraggableScrollableSheet(

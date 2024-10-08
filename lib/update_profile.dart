@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart'; // For kIsWeb
+import 'package:flutter/foundation.dart';
 
 class UpdateProfile extends StatefulWidget {
   final Function(String) onProfileUpdate;
@@ -17,12 +17,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  String userType = 'Student'; // Default user type
+  String userType = 'Student';
 
   @override
   void initState() {
     super.initState();
-    _fetchUserData(); // Fetch user data on init
+    _fetchUserData();
   }
 
   Future<void> _fetchUserData() async {
@@ -75,19 +75,17 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine orientation and platform (web or not)
     bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     bool isWeb = kIsWeb;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    // Calculate text field width based on orientation and platform
     double fieldWidth;
     if (isWeb) {
-      fieldWidth = screenWidth * 0.30; // 30% for web
+      fieldWidth = screenWidth * 0.30;
     } else if (isLandscape) {
-      fieldWidth = screenWidth * 0.40; // 20% for landscape on mobile/tablet
+      fieldWidth = screenWidth * 0.40;
     } else {
-      fieldWidth = screenWidth * 0.90; // 90% for portrait on mobile/tablet
+      fieldWidth = screenWidth * 0.90;
     }
 
     return Scaffold(
@@ -98,7 +96,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           child: Column(
             children: [
               Container(
-                width: fieldWidth, // Dynamic width for the text field
+                width: fieldWidth,
                 child: TextField(
                   controller: _nameController,
                   decoration: InputDecoration(labelText: 'Name'),
@@ -106,16 +104,16 @@ class _UpdateProfileState extends State<UpdateProfile> {
               ),
               SizedBox(height: 10),
               Container(
-                width: fieldWidth, // Dynamic width for the text field
+                width: fieldWidth,
                 child: TextField(
                   controller: _emailController,
                   decoration: InputDecoration(labelText: 'Email'),
-                  readOnly: true, // Email is non-editable
+                  readOnly: true,
                 ),
               ),
               SizedBox(height: 10),
               Container(
-                width: fieldWidth, // Dynamic width for the text field
+                width: fieldWidth,
                 child: TextField(
                   controller: _passwordController,
                   decoration: InputDecoration(labelText: 'New Password'),

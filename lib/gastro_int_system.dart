@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:flutter_prevent_screenshot/disablescreenshot.dart';
-
 import 'large_intestine.dart';
 
 class GastroIntSystem extends StatefulWidget {
@@ -18,7 +16,6 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
   @override
   void initState(){
     super.initState();
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     FlutterPreventScreenshot.instance.screenshotOff();
   }
 
@@ -74,8 +71,8 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center, // Center content horizontally
-                    mainAxisAlignment: MainAxisAlignment.start, // Start content below the AppBar
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(height: 20),
                       Wrap(
@@ -86,7 +83,7 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
                           _buildCard("Large Intestine", () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => LargeIntestine()), // Navigate to Colon
+                              MaterialPageRoute(builder: (context) => LargeIntestine()),
                             );
                           }, 'assets/images/largeintestine.jpg'),
                           _buildCard("Appendix", () => _selectTopic("Appendix"), "assets/images/appendix.jpeg"),
@@ -183,7 +180,7 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
         ),
         elevation: 8,
         child: Container(
-          width: 140, // Slightly reduced size
+          width: 140,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -191,7 +188,7 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 child: Image.asset(
                   imagePath,
-                  height: 100, // Slightly reduced size
+                  height: 100,
                   fit: BoxFit.cover,
                 ),
               ),

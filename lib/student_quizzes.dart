@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 class StudentQuizzes extends StatefulWidget {
   @override
@@ -10,13 +11,11 @@ class StudentQuizzes extends StatefulWidget {
 }
 
 class _StudentQuizzesState extends State<StudentQuizzes> {
-  // Function to fetch all quizzes
   Future<List<Map<String, dynamic>>> _fetchQuizzes() async {
     QuerySnapshot quizSnapshot = await FirebaseFirestore.instance.collection('quizzes').get();
     return quizSnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
   }
 
-  // Function to fetch current date and time from the internet
   Future<DateTime> _fetchCurrentDateTime() async {
     final response = await http.get(Uri.parse('http://worldtimeapi.org/api/timezone/Etc/UTC'));
     if (response.statusCode == 200) {
@@ -28,11 +27,9 @@ class _StudentQuizzesState extends State<StudentQuizzes> {
     }
   }
 
-  // Function to navigate to quiz details page
   void _navigateToQuizDetails(Map<String, dynamic> quiz, DateTime currentDateTime) {
     DateTime availabilityDate = DateTime.parse(quiz['availability']['date']);
     String time = quiz['availability']['time'];
-
     DateTime quizStartDateTime = DateTime.parse('${availabilityDate.toIso8601String().split('T')[0]} $time');
 
     if (currentDateTime.isBefore(quizStartDateTime)) {
@@ -76,8 +73,6 @@ class _StudentQuizzesState extends State<StudentQuizzes> {
           }
 
           List<Map<String, dynamic>> quizzes = snapshot.data!;
-
-          // Sort quizzes based on the availability date
           quizzes.sort((a, b) {
             DateTime dateA = DateTime.parse(a['availability']['date']);
             DateTime dateB = DateTime.parse(b['availability']['date']);
@@ -96,17 +91,28 @@ class _StudentQuizzesState extends State<StudentQuizzes> {
               }
 
               DateTime currentDateTime = currentDateTimeSnapshot.data!;
-
-              // Group quizzes into Upcoming and Past
+              List<Map<String, dynamic>> onGoingQuizzes = [];
               List<Map<String, dynamic>> upcomingQuizzes = [];
               List<Map<String, dynamic>> pastQuizzes = [];
 
               for (var quiz in quizzes) {
                 DateTime availabilityDate = DateTime.parse(quiz['availability']['date']);
                 String time = quiz['availability']['time'];
-                DateTime quizStartDateTime = DateTime.parse('${availabilityDate.toIso8601String().split('T')[0]} $time');
+                List<String> timeParts = time.split(':');
+                int availabilityHour = int.parse(timeParts[0]);
+                int availabilityMinute = int.parse(timeParts[1]);
+                DateTime quizStartDateTime = DateTime(
+                  availabilityDate.year,
+                  availabilityDate.month,
+                  availabilityDate.day,
+                  availabilityHour,
+                  availabilityMinute,
+                );
+                DateTime quizEndDateTime = quizStartDateTime.add(Duration(minutes: 5));
 
-                if (currentDateTime.isBefore(quizStartDateTime)) {
+                if (currentDateTime.isAfter(quizStartDateTime) && currentDateTime.isBefore(quizEndDateTime)) {
+                  onGoingQuizzes.add(quiz);
+                } else if (currentDateTime.isBefore(quizStartDateTime)) {
                   upcomingQuizzes.add(quiz);
                 } else {
                   pastQuizzes.add(quiz);
@@ -115,6 +121,37 @@ class _StudentQuizzesState extends State<StudentQuizzes> {
 
               return ListView(
                 children: [
+                  if (onGoingQuizzes.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Ongoing Quizzes',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 32.0),
+                      child: Column(
+                        children: onGoingQuizzes.map((quiz) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  quiz['title'],
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                  'Started on: ${DateFormat('dd, MMMM yyyy').format(DateTime.parse(quiz['availability']['date']))} ${quiz['availability']['time']}',
+                                ),
+                                onTap: () => _navigateToQuizDetails(quiz, currentDateTime),
+                              ),
+                              Divider(),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
                   if (upcomingQuizzes.isNotEmpty) ...[
                     Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -124,18 +161,23 @@ class _StudentQuizzesState extends State<StudentQuizzes> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 32.0), // Indentation for upcoming quizzes
+                      padding: const EdgeInsets.only(left: 32.0),
                       child: Column(
                         children: upcomingQuizzes.map((quiz) {
-                          return ListTile(
-                            title: Text(
-                              quiz['title'],
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              'Starts on: ${DateFormat('dd, MMMM yyyy').format(DateTime.parse(quiz['availability']['date']))} ${quiz['availability']['time']}',
-                            ),
-                            onTap: () => _navigateToQuizDetails(quiz, currentDateTime),
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  quiz['title'],
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                  'Starts on: ${DateFormat('dd, MMMM yyyy').format(DateTime.parse(quiz['availability']['date']))} ${quiz['availability']['time']}',
+                                ),
+                                onTap: () => _navigateToQuizDetails(quiz, currentDateTime),
+                              ),
+                              Divider(),
+                            ],
                           );
                         }).toList(),
                       ),
@@ -150,18 +192,23 @@ class _StudentQuizzesState extends State<StudentQuizzes> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 32.0), // Indentation for past quizzes
+                      padding: const EdgeInsets.only(left: 32.0),
                       child: Column(
                         children: pastQuizzes.map((quiz) {
-                          return ListTile(
-                            title: Text(
-                              quiz['title'],
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              'Started on: ${DateFormat('dd, MMMM yyyy').format(DateTime.parse(quiz['availability']['date']))} ${quiz['availability']['time']}',
-                            ),
-                            onTap: () => _navigateToQuizDetails(quiz, currentDateTime),
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  quiz['title'],
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                  'Started on: ${DateFormat('dd, MMMM yyyy').format(DateTime.parse(quiz['availability']['date']))} ${quiz['availability']['time']}',
+                                ),
+                                onTap: () => _navigateToQuizDetails(quiz, currentDateTime),
+                              ),
+                              Divider(),
+                            ],
                           );
                         }).toList(),
                       ),
@@ -177,66 +224,120 @@ class _StudentQuizzesState extends State<StudentQuizzes> {
   }
 }
 
-// Widget to display quiz details
-class QuizDetails extends StatelessWidget {
+class QuizDetails extends StatefulWidget {
   final Map<String, dynamic> quiz;
 
   QuizDetails({required this.quiz});
 
   @override
+  _QuizDetailsState createState() => _QuizDetailsState();
+}
+
+class _QuizDetailsState extends State<QuizDetails> {
+  int _currentQuestionIndex = 0;
+  List<String?> _selectedAnswers = [];
+  late int _timeRemaining;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedAnswers = List.filled(widget.quiz['questions'].length, null);
+    _timeRemaining = widget.quiz['timeAllotted'] * 60;
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_timeRemaining > 0) {
+          _timeRemaining--;
+        } else {
+          _timer.cancel();
+          _submitQuiz();
+        }
+      });
+    });
+  }
+
+  void _submitQuiz() {
+    _timer.cancel();
+    String report = 'Quiz Report\n\n';
+    for (int i = 0; i < widget.quiz['questions'].length; i++) {
+      report += 'Q${i + 1}: ${widget.quiz['questions'][i]['question']}\n';
+      report += 'Your Answer: ${_selectedAnswers[i]}\n';
+      report += 'Correct Answer: ${widget.quiz['questions'][i]['correctAnswer']}\n\n';
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Quiz Submitted'),
+          content: Text(report),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          quiz['title'],
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.red,
-        automaticallyImplyLeading: false,
+        title: Text(widget.quiz['title']),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Teacher: ${quiz['teacherName']}', style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Text('Time Allotted: ${quiz['timeAllotted']} minutes'),
-            SizedBox(height: 10),
-            Text('Questions:', style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: quiz['questions'].length,
-                itemBuilder: (context, index) {
-                  final question = quiz['questions'][index];
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Q${index + 1}: ${question['question']}'),
-                          SizedBox(height: 10),
-                          ...List.generate(question['options'].length, (optionIndex) {
-                            return Text('Option ${optionIndex + 1}: ${question['options'][optionIndex]}');
-                          }),
-                          SizedBox(height: 5),
-                          Text('Correct Answer: ${question['correctAnswer']}', style: TextStyle(fontWeight: FontWeight.bold)),
-                          if (question['imagePath'] != null) ...[
-                            SizedBox(height: 10),
-                            Image.network(question['imagePath']), // Display the question image if available
-                          ]
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Time Remaining: ${(_timeRemaining ~/ 60).toString().padLeft(2, '0')}:${(_timeRemaining % 60).toString().padLeft(2, '0')}',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Text(widget.quiz['questions'][_currentQuestionIndex]['question']),
+                for (var option in widget.quiz['questions'][_currentQuestionIndex]['options'])
+                  RadioListTile<String>(
+                    title: Text(option),
+                    value: option,
+                    groupValue: _selectedAnswers[_currentQuestionIndex],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedAnswers[_currentQuestionIndex] = value;
+                      });
+                    },
+                  ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_currentQuestionIndex < widget.quiz['questions'].length - 1) {
+                      setState(() {
+                        _currentQuestionIndex++;
+                      });
+                    } else {
+                      _submitQuiz();
+                    }
+                  },
+                  child: Text(_currentQuestionIndex < widget.quiz['questions'].length - 1 ? 'Next' : 'Submit'),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -46,7 +46,6 @@ class _QuizDetailsState extends State<QuizDetails> {
           _availabilityDateController.text = quizData['availability']['date'];
           _availabilityTimeController.text = quizData['availability']['time'];
 
-          // Initialize controllers for questions, options, and correct answers
           _questionControllers = _questions.map((q) => TextEditingController(text: q['question'])).toList();
           _optionControllers = _questions.map((q) {
             return List<TextEditingController>.generate(
@@ -64,29 +63,26 @@ class _QuizDetailsState extends State<QuizDetails> {
 
   Future<void> _saveChanges() async {
     try {
-      // Prepare updated questions list with edited values
       List<Map<String, dynamic>> updatedQuestions = [];
       for (int i = 0; i < _questions.length; i++) {
         updatedQuestions.add({
           'question': _questionControllers[i].text,
           'options': _optionControllers[i].map((controller) => controller.text).toList(),
           'correctAnswer': _correctAnswerControllers[i].text,
-          'imagePath': _questions[i]['imagePath'], // Keep image path
+          'imagePath': _questions[i]['imagePath'],
         });
       }
 
-      // Update the quiz data in Firestore
       await FirebaseFirestore.instance.collection('quizzes').doc(widget.quizId).update({
         'title': _titleController.text,
         'questions': updatedQuestions,
-        'timeAllotted': int.tryParse(_timeAllottedController.text) ?? 0, // Save time allotted
+        'timeAllotted': int.tryParse(_timeAllottedController.text) ?? 0,
         'availability': {
           'date': _availabilityDateController.text,
           'time': _availabilityTimeController.text,
         },
       });
 
-      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Quiz updated successfully!')),
       );
@@ -99,7 +95,6 @@ class _QuizDetailsState extends State<QuizDetails> {
   }
 
   Future<void> _deleteQuiz() async {
-    // Show confirmation dialog
     bool confirm = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -120,7 +115,6 @@ class _QuizDetailsState extends State<QuizDetails> {
 
     if (confirm) {
       try {
-        // Fetch the quiz data to get the image path
         DocumentSnapshot quizSnapshot = await FirebaseFirestore.instance
             .collection('quizzes')
             .doc(widget.quizId)
@@ -128,22 +122,18 @@ class _QuizDetailsState extends State<QuizDetails> {
 
         if (quizSnapshot.exists) {
           Map<String, dynamic> quizData = quizSnapshot.data() as Map<String, dynamic>;
-          String imagePath = quizData['questions'][0]['imagePath']; // Assuming you want to delete the first image
+          String imagePath = quizData['questions'][0]['imagePath'];
 
-          // Delete the image from Firebase Storage
           if (imagePath.isNotEmpty) {
             await FirebaseStorage.instance.refFromURL(imagePath).delete();
           }
 
-          // Delete the quiz document from Firestore
           await FirebaseFirestore.instance.collection('quizzes').doc(widget.quizId).delete();
 
-          // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Quiz deleted successfully!')),
           );
 
-          // Navigate back or close the screen
           Navigator.of(context).pop();
         }
       } catch (e) {
@@ -155,7 +145,6 @@ class _QuizDetailsState extends State<QuizDetails> {
     }
   }
 
-  // Method to pick a date for availability
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -170,7 +159,6 @@ class _QuizDetailsState extends State<QuizDetails> {
     }
   }
 
-  // Method to pick a time for availability
   Future<void> _selectTime(BuildContext context) async {
     TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -192,7 +180,7 @@ class _QuizDetailsState extends State<QuizDetails> {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.red,
-        automaticallyImplyLeading: false, // Removes the back arrow
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -204,16 +192,12 @@ class _QuizDetailsState extends State<QuizDetails> {
                 decoration: InputDecoration(labelText: 'Quiz Title'),
               ),
               SizedBox(height: 20),
-
-              // Time Allotted Field
               TextField(
                 controller: _timeAllottedController,
                 decoration: InputDecoration(labelText: 'Time Allotted (in minutes)'),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 20),
-
-              // Availability Date Field
               TextField(
                 controller: _availabilityDateController,
                 decoration: InputDecoration(
@@ -226,8 +210,6 @@ class _QuizDetailsState extends State<QuizDetails> {
                 readOnly: true,
               ),
               SizedBox(height: 20),
-
-              // Availability Time Field
               TextField(
                 controller: _availabilityTimeController,
                 decoration: InputDecoration(
@@ -240,7 +222,6 @@ class _QuizDetailsState extends State<QuizDetails> {
                 readOnly: true,
               ),
               SizedBox(height: 20),
-
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -276,7 +257,6 @@ class _QuizDetailsState extends State<QuizDetails> {
                             ),
                           ),
                           SizedBox(height: 10),
-                          // Display image for the question
                           if (_questions[index]['imagePath'] != null)
                             Image.network(_questions[index]['imagePath']),
                         ],
@@ -285,7 +265,6 @@ class _QuizDetailsState extends State<QuizDetails> {
                   );
                 },
               ),
-
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveChanges,

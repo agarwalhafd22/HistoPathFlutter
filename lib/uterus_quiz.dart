@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart'; // Import this package for setting orientation
+import 'package:flutter/services.dart';
 
 class UterusQuiz extends StatefulWidget {
   @override
@@ -12,8 +12,8 @@ class _UterusQuizState extends State<UterusQuiz> {
   int currentQuestionIndex = 0;
   bool quizStarted = false;
   int timerSeconds = 0;
-  String? selectedOption; // Store selected option for the current question
-  List<String> userAnswers = []; // Store user answers for all questions
+  String? selectedOption;
+  List<String> userAnswers = [];
 
   List<Map<String, dynamic>> questions = [
     {
@@ -31,20 +31,16 @@ class _UterusQuizState extends State<UterusQuiz> {
       'options': ['Uterine blood vessels', 'Uterine glands', 'Lining epithelium', 'Stroma'],
       'heading': 'Identify the structure',
     },
-    // Add more questions here as needed
   ];
 
-  // Predefined answer key (correct answers)
-  List<String> answerKey = ['Myometrium', 'Endometrium', 'Lining epithelium']; // Add correct answers corresponding to each question
+  List<String> answerKey = ['Myometrium', 'Endometrium', 'Lining epithelium'];
 
   void startQuiz() {
-    // Lock the orientation to portrait
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
     setState(() {
       quizStarted = true;
       timerSeconds = 0;
-      userAnswers = List.filled(questions.length, ''); // Initialize user answers
+      userAnswers = List.filled(questions.length, '');
     });
     startTimer();
   }
@@ -66,14 +62,14 @@ class _UterusQuizState extends State<UterusQuiz> {
       setState(() {
         userAnswers[currentQuestionIndex] = selectedOption ?? '';
         currentQuestionIndex++;
-        selectedOption = userAnswers[currentQuestionIndex]; // Set the selected option for the next question
+        selectedOption = userAnswers[currentQuestionIndex];
       });
     }
   }
 
   void clearSelection() {
     setState(() {
-      selectedOption = null; // Clear the selected option
+      selectedOption = null;
     });
   }
 
@@ -82,7 +78,7 @@ class _UterusQuizState extends State<UterusQuiz> {
       setState(() {
         userAnswers[currentQuestionIndex] = selectedOption ?? '';
         currentQuestionIndex--;
-        selectedOption = userAnswers[currentQuestionIndex]; // Set the selected option for the previous question
+        selectedOption = userAnswers[currentQuestionIndex];
       });
     }
   }
@@ -91,14 +87,12 @@ class _UterusQuizState extends State<UterusQuiz> {
     userAnswers[currentQuestionIndex] = selectedOption ?? '';
     int score = 0;
 
-    // Calculate the score
     for (int i = 0; i < questions.length; i++) {
       if (userAnswers[i] == answerKey[i]) {
         score++;
       }
     }
 
-    // Show results
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -110,7 +104,7 @@ class _UterusQuizState extends State<UterusQuiz> {
               child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
-                resetQuiz(); // Reset the quiz after showing results
+                resetQuiz();
               },
             ),
           ],
@@ -120,9 +114,7 @@ class _UterusQuizState extends State<UterusQuiz> {
   }
 
   void resetQuiz() {
-    // Allow all orientations again
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
-
     setState(() {
       quizStarted = false;
       currentQuestionIndex = 0;
@@ -134,42 +126,37 @@ class _UterusQuizState extends State<UterusQuiz> {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate minutes and seconds
     int minutes = timerSeconds ~/ 60;
     int seconds = timerSeconds % 60;
-
-    // Get screen dimensions
     double screenWidth = MediaQuery.of(context).size.width;
     double cardWidth;
 
-    // Set card width based on orientation and platform
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
-      cardWidth = screenWidth * 0.20; // 30% for landscape
+      cardWidth = screenWidth * 0.20;
     } else if (kIsWeb) {
-      cardWidth = screenWidth * 0.15; // 20% for web
+      cardWidth = screenWidth * 0.15;
     } else {
-      cardWidth = screenWidth * 0.90; // 90% for portrait
+      cardWidth = screenWidth * 0.90;
     }
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Remove the back button from the app bar
+        automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView( // Wrap the body with SingleChildScrollView
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // Center the "Uterus" text and make it invisible when the quiz starts
             Visibility(
-              visible: !quizStarted, // Make it invisible when the quiz starts
+              visible: !quizStarted,
               child: Center(
                 child: Text(
                   'Uterus',
                   style: TextStyle(
-                    fontFamily: 'serif-monospace', // Set font to serif-monospace
-                    fontSize: 40, // Set font size as needed
-                    fontWeight: FontWeight.bold, // Bold text
+                    fontFamily: 'serif-monospace',
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -188,13 +175,13 @@ class _UterusQuizState extends State<UterusQuiz> {
               ),
               SizedBox(height: 20),
               Container(
-                width: cardWidth, // Set the width of the card
+                width: cardWidth,
                 child: Card(
                   elevation: 5,
                   child: Column(
                     children: [
                       Text(
-                        questions[currentQuestionIndex]['heading'], // Display the heading
+                        questions[currentQuestionIndex]['heading'],
                         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -210,7 +197,7 @@ class _UterusQuizState extends State<UterusQuiz> {
                                   groupValue: selectedOption,
                                   onChanged: (value) {
                                     setState(() {
-                                      selectedOption = value as String; // Update selected option
+                                      selectedOption = value as String;
                                     });
                                   },
                                 ),
@@ -220,7 +207,7 @@ class _UterusQuizState extends State<UterusQuiz> {
                         ],
                       ),
                       ElevatedButton(
-                        onPressed: clearSelection, // Clear button to reset selection
+                        onPressed: clearSelection,
                         child: Text('Clear Selection'),
                       ),
                     ],
@@ -228,7 +215,6 @@ class _UterusQuizState extends State<UterusQuiz> {
                 ),
               ),
               SizedBox(height: 20),
-              // Navigation buttons right under the card
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -239,7 +225,6 @@ class _UterusQuizState extends State<UterusQuiz> {
                       backgroundColor: currentQuestionIndex > 0 ? Colors.blue : Colors.grey,
                     ),
                   ),
-                  // Show "Next" button only if an option is selected
                   if (selectedOption != null)
                     ElevatedButton(
                       onPressed: (currentQuestionIndex < questions.length - 1)

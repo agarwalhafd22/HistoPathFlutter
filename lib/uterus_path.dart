@@ -28,18 +28,12 @@ class _UterusPathState extends State<UterusPath> {
       'color': Colors.green,
       'description': 'The cells filled with mucin with basally pushed nucleus',
     },
-    // {
-    //   'left': 130.0,
-    //   'top': 265.0,
-    //   'color': Colors.purple,
-    //   'description': 'Uterine glands: Tubular glands which become more coiled in the secretory phase of the menstrual cycle',
-    // },
   ];
 
   int _currentPointIndex = 0;
-  bool _isStarted = false; // Track if the process has started
+  bool _isStarted = false;
   final TransformationController _transformationController = TransformationController();
-  String _imageUrl = ""; // State variable to store the image URL
+  String _imageUrl = "";
 
   @override
   void initState() {
@@ -48,16 +42,15 @@ class _UterusPathState extends State<UterusPath> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    _loadImageFromFirebase(); // Load the image URL once
+    _loadImageFromFirebase();
   }
 
   Future<void> _loadImageFromFirebase() async {
     try {
-      // Get the download URL from Firebase Storage
       final Reference storageRef = FirebaseStorage.instance.ref().child('uterus/patho/mucinous cystadenoma 1.jpg');
       String downloadUrl = await storageRef.getDownloadURL();
       setState(() {
-        _imageUrl = downloadUrl; // Store the image URL in state
+        _imageUrl = downloadUrl;
       });
     } catch (e) {
       print("Error loading image: $e");
@@ -77,15 +70,11 @@ class _UterusPathState extends State<UterusPath> {
   }
 
   void _zoomToPoint(int index) {
-    final double scaleFactor = 2.0; // Scale factor for zoom
+    final double scaleFactor = 2.0;
     final double imageWidth = MediaQuery.of(context).size.width * 0.9;
     final double imageHeight = MediaQuery.of(context).size.width * 0.9;
-
-    // Calculate translation for zooming into the current point
     final double xTranslation = -points[index]['left']! * scaleFactor + (imageWidth / 2);
     final double yTranslation = -points[index]['top']! * scaleFactor + (imageHeight / 2);
-
-    // Set the transformation matrix with a delay for smooth transition
     Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
         _transformationController.value = Matrix4.identity()
@@ -115,17 +104,17 @@ class _UterusPathState extends State<UterusPath> {
 
   void _startProcess() {
     setState(() {
-      _isStarted = true; // Set started state to true
-      _currentPointIndex = 0; // Reset to the first point
+      _isStarted = true;
+      _currentPointIndex = 0;
     });
-    _zoomToPoint(_currentPointIndex); // Zoom to the first point
+    _zoomToPoint(_currentPointIndex);
   }
 
   void _finishProcess() {
     setState(() {
-      _isStarted = false; // Reset started state
-      _currentPointIndex = 0; // Reset to the first point
-      _transformationController.value = Matrix4.identity(); // Reset zoom
+      _isStarted = false;
+      _currentPointIndex = 0;
+      _transformationController.value = Matrix4.identity();
     });
   }
 
@@ -142,25 +131,23 @@ class _UterusPathState extends State<UterusPath> {
           style: TextStyle(color: Colors.white),
           textAlign: TextAlign.left,
         ),
-        automaticallyImplyLeading: false, // Set to false to prevent the default back button
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.red,
         centerTitle: false,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.white, // Set the back arrow color to white
+            color: Colors.white,
           ),
           onPressed: () {
-            Navigator.of(context).pop(); // Navigate back when the button is pressed
+            Navigator.of(context).pop();
           },
         ),
       ),
-
       body: _imageUrl.isEmpty
           ? Center(child: CircularProgressIndicator())
           : Column(
         children: [
-          // Top half for the image
           Expanded(
             flex: 2,
             child: Container(
@@ -179,7 +166,6 @@ class _UterusPathState extends State<UterusPath> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    // Display all points
                     ...points.map((point) {
                       final index = points.indexOf(point);
                       return Positioned(
@@ -200,9 +186,7 @@ class _UterusPathState extends State<UterusPath> {
                             splashColor: Colors.white.withOpacity(0.5),
                             child: TweenAnimationBuilder<double>(
                               duration: Duration(milliseconds: 300),
-                              tween: Tween<double>(
-                                  begin: 1.0,
-                                  end: index == _currentPointIndex ? 1.5 : 1.0),
+                              tween: Tween<double>(begin: 1.0, end: index == _currentPointIndex ? 1.5 : 1.0),
                               builder: (context, scale, child) {
                                 return Transform.scale(
                                   scale: scale,
@@ -228,17 +212,15 @@ class _UterusPathState extends State<UterusPath> {
               ),
             ),
           ),
-          // Bottom half for the description dialog
           _buildBottomDialog(),
         ],
       ),
     );
   }
 
-  // Helper method to build the bottom dialog
   Widget _buildBottomDialog() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.30, // Set height to 40% of the screen
+      height: MediaQuery.of(context).size.height * 0.30,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.red,
@@ -252,12 +234,6 @@ class _UterusPathState extends State<UterusPath> {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
             textAlign: TextAlign.center,
           ),
-          // SizedBox(height: 8),
-          // Text(
-          //   'High Magnification',
-          //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
-          //   textAlign: TextAlign.center,
-          // ),
           SizedBox(height: 16),
           Text(
             _isStarted

@@ -7,31 +7,31 @@ class AllQuizzes extends StatefulWidget {
 }
 
 class _AllQuizzesState extends State<AllQuizzes> {
-  // Function to fetch all quizzes grouped by teachers
+
   Future<Map<String, List<Map<String, dynamic>>>> _fetchQuizzesByTeachers() async {
     Map<String, List<Map<String, dynamic>>> quizzesByTeachers = {};
 
-    // Fetch all quizzes from Firestore
+
     QuerySnapshot quizSnapshot = await FirebaseFirestore.instance.collection('quizzes').get();
 
     for (var doc in quizSnapshot.docs) {
       Map<String, dynamic> quizData = doc.data() as Map<String, dynamic>;
 
-      String teacherName = quizData['teacherName']; // Assuming each quiz has a 'teacherName' field
+      String teacherName = quizData['teacherName'];
 
-      // If this teacher doesn't have any quizzes yet in the map, initialize an empty list
+
       if (!quizzesByTeachers.containsKey(teacherName)) {
         quizzesByTeachers[teacherName] = [];
       }
 
-      // Add the quiz to the teacher's list
+
       quizzesByTeachers[teacherName]!.add(quizData);
     }
 
     return quizzesByTeachers;
   }
 
-  // Function to navigate to quiz details page
+
   void _navigateToQuizDetails(Map<String, dynamic> quiz) {
     Navigator.push(
       context,
@@ -50,7 +50,7 @@ class _AllQuizzesState extends State<AllQuizzes> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // Bold font and white color
         ),
         backgroundColor: Colors.red,
-        automaticallyImplyLeading: false, // Remove back arrow
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
         future: _fetchQuizzesByTeachers(),
@@ -79,8 +79,8 @@ class _AllQuizzesState extends State<AllQuizzes> {
                 children: quizzes.map((quiz) {
                   return ListTile(
                     title: Text(quiz['title']),
-                    subtitle: Text('Created on: ${quiz['createdAt'].toDate().toLocal()}'), // Change 'Created by' to 'Created on'
-                    onTap: () => _navigateToQuizDetails(quiz), // Navigate to quiz details
+                    subtitle: Text('Created on: ${quiz['createdAt'].toDate().toLocal()}'),
+                    onTap: () => _navigateToQuizDetails(quiz),
                   );
                 }).toList(),
               );
@@ -104,10 +104,10 @@ class QuizDetails extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           quiz['title'],
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // Bold font and white color
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.red,
-        automaticallyImplyLeading: false, // Remove back arrow
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -141,7 +141,7 @@ class QuizDetails extends StatelessWidget {
                           Text('Correct Answer: ${question['correctAnswer']}', style: TextStyle(fontWeight: FontWeight.bold)),
                           if (question['imagePath'] != null) ...[
                             SizedBox(height: 10),
-                            Image.network(question['imagePath']), // Display the question image if available
+                            Image.network(question['imagePath']),
                           ]
                         ],
                       ),

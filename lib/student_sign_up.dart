@@ -11,7 +11,7 @@ class StudentSignUp extends StatefulWidget {
 
 class _StudentSignUpState extends State<StudentSignUp> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final DatabaseReference databaseRef = FirebaseDatabase.instance.ref(); // Firebase Realtime Database reference
+  final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _collegeController = TextEditingController();
@@ -117,7 +117,6 @@ class _StudentSignUpState extends State<StudentSignUp> {
     String password = _passwordController.text;
     String confirmPassword = _confirmPasswordController.text;
 
-    // Validate password and confirm password
     if (password != confirmPassword) {
       showToast(message: "Passwords do not match", backgroundColor: Colors.red);
       setState(() {
@@ -127,26 +126,22 @@ class _StudentSignUpState extends State<StudentSignUp> {
     }
 
     try {
-      // Create user using Firebase Authentication
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
 
       if (user != null) {
-        // Replace '.' with ',' in email to make it Firebase-friendly
         String sanitizedEmail = email.replaceAll('.', ',');
 
-        // Save user data to Firebase Realtime Database under 'StudentDB'
         await databaseRef.child('StudentDB').child(sanitizedEmail).set({
           'name': name,
           'college': college,
           'phone': phone,
           'email': email,
-          'password': password, // Not recommended to store password in plain text
+          'password': password,
         });
 
         showToast(message: "Account created, sign in", backgroundColor: Colors.green);
 
-        // Navigate to StudentLoginPage after successful sign-up
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => StudentLogin()),
@@ -162,7 +157,6 @@ class _StudentSignUpState extends State<StudentSignUp> {
     }
   }
 
-  // Toast helper method using fluttertoast
   void showToast({required String message, Color? backgroundColor}) {
     Fluttertoast.showToast(
       msg: message,

@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart'; // Firebase Authentication
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart'; // For displaying toast messages
-import 'main_activity_teacher.dart'; // Import the MainActivity screen
-import 'student_login.dart'; // Import the StudentLogin screen
-import 'teacher_sign_up.dart'; // Import the TeacherSignUp screen
+import 'package:fluttertoast/fluttertoast.dart';
+import 'main_activity_teacher.dart';
+import 'student_login.dart';
+import 'teacher_sign_up.dart';
 
 class TeacherLogin extends StatefulWidget {
   @override
@@ -27,7 +27,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: null, // No title in the AppBar
+        title: null,
         backgroundColor: Color(0xFFbe252d),
       ),
       body: SingleChildScrollView(
@@ -36,7 +36,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 20), // Space below the AppBar
+              SizedBox(height: 20),
               Text(
                 'Teachers\' Portal',
                 style: TextStyle(
@@ -44,12 +44,12 @@ class _TeacherLoginState extends State<TeacherLogin> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 30), // Space between title and image
+              SizedBox(height: 30),
               Image.asset('assets/images/teacherlogin.png', height: 150),
               SizedBox(height: 30),
               Center(
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 400), // Max width for Card
+                  constraints: BoxConstraints(maxWidth: 400),
                   child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
@@ -72,7 +72,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
               SizedBox(height: 16),
               Center(
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 400), // Max width for Card
+                  constraints: BoxConstraints(maxWidth: 400),
                   child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
@@ -95,7 +95,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
               ),
               SizedBox(height: 30),
               isLoggingIn
-                  ? CircularProgressIndicator() // Show loading indicator if logging in
+                  ? CircularProgressIndicator()
                   : ElevatedButton(
                 onPressed: _login,
                 child: Text('Login'),
@@ -136,20 +136,17 @@ class _TeacherLoginState extends State<TeacherLogin> {
       String email = _emailController.text;
       String password = _passwordController.text;
 
-      // Sign in with Firebase Authentication
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // On successful login, navigate to MainActivity
       showToast(message: "Login successful", backgroundColor: Colors.green);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => MainActivityTeacher()),
       );
     } catch (e) {
-      // If login fails, show an error message
       showToast(message: "Login failed: ${e.toString()}", backgroundColor: Colors.red);
     } finally {
       setState(() {
@@ -158,7 +155,6 @@ class _TeacherLoginState extends State<TeacherLogin> {
     }
   }
 
-  // Toast helper method using fluttertoast
   void showToast({required String message, Color? backgroundColor}) {
     Fluttertoast.showToast(
       msg: message,
