@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_histo_path/appendix_path.dart';
 import 'package:flutter_histo_path/large_path.dart';
 import 'package:flutter_histo_path/uterus_path.dart';
 
-class LargeIntestine extends StatefulWidget {
+import 'liver_path.dart';
+
+class Liver extends StatefulWidget {
   @override
-  _LargeIntestineState createState() => _LargeIntestineState();
+  _LiverState createState() => _LiverState();
 }
 
-class _LargeIntestineState extends State<LargeIntestine> {
+class _LiverState extends State<Liver> {
   final List<Map<String, dynamic>> points = [
     {
-      'left': 150.0,
-      'top': 300.0,
+      'left': 220.0,
+      'top': 150.0,
       'color': Colors.red,
-      'description': 'Submucosa containing connective tissue',
+      'description': 'Branch of hepatic artery',
     },
     {
-      'left': 150.0,
-      'top': 210.0,
+      'left': 270.0,
+      'top': 180.0,
       'color': Colors.green,
-      'description': 'Crypts of Lieberkuhn: They are also intestinal glands contains abundant goblet cells',
+      'description': 'Branch of hepatic duct',
     },
     {
-      'left': 200.0,
-      'top': 265.0,
+      'left': 230.0,
+      'top': 250.0,
       'color': Colors.purple,
-      'description': 'Muscularis mucosa containing smooth muscles',
+      'description': 'Cords of hepatocytes',
     },
   ];
 
@@ -48,7 +51,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
 
   Future<void> _loadImageFromFirebase() async {
     try {
-      final Reference storageRef = FirebaseStorage.instance.ref().child('gastro/largeintestine/histo/GIT_Large intestine_High magnification.png');
+      final Reference storageRef = FirebaseStorage.instance.ref().child('gastro/liver/histo/GIT_Liver_High magnification.png');
       String downloadUrl = await storageRef.getDownloadURL();
       setState(() {
         _imageUrl = downloadUrl;
@@ -121,7 +124,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
   }
 
   void _toggleSection() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LargePath()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LiverPath()));
   }
 
   @override
@@ -243,7 +246,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
                           ),
                         ),
                         Text(
-                          'Large Intestine',
+                          'Liver',
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
@@ -257,7 +260,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
                         Text(
                           _isStarted
                               ? points[_currentPointIndex]['description']
-                              : 'Under higher magnification, the mucosa of the large intestine shows the crypts of Leiberkuhn with their lining cells, those are the columnar cells and goblet cells. The goblet cells appear empty to basophillic due to the mucin content which washes off during staining process. The connective tissue in the submucosa appear to contain nerve plexus, lymphoid follicles and connective tissue.',
+                              : 'The portal triad consists of the branches of the hepatic artery, portal vein and the hepatic duct. The portal vein has a collapsible larger lumen than the hepatic artery. The hepatic duct is lined by the cuboidal epithelium. The space between these structures is called the space of Mall.',
                           style: TextStyle(fontSize: 16, color: Colors.white),
                           textAlign: TextAlign.center,
                         ),

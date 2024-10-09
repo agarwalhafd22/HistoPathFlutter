@@ -1,33 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_histo_path/large_path.dart';
-import 'package:flutter_histo_path/uterus_path.dart';
+import 'package:flutter_histo_path/uterus.dart';
 
-class LargeIntestine extends StatefulWidget {
+class AppendixPath extends StatefulWidget {
   @override
-  _LargeIntestineState createState() => _LargeIntestineState();
+  _AppendixPathState createState() => _AppendixPathState();
 }
 
-class _LargeIntestineState extends State<LargeIntestine> {
+class _AppendixPathState extends State<AppendixPath> {
   final List<Map<String, dynamic>> points = [
     {
-      'left': 150.0,
-      'top': 300.0,
+      'left': 60.0,
+      'top': 180.0,
       'color': Colors.red,
-      'description': 'Submucosa containing connective tissue',
-    },
-    {
-      'left': 150.0,
-      'top': 210.0,
-      'color': Colors.green,
-      'description': 'Crypts of Lieberkuhn: They are also intestinal glands contains abundant goblet cells',
-    },
-    {
-      'left': 200.0,
-      'top': 265.0,
-      'color': Colors.purple,
-      'description': 'Muscularis mucosa containing smooth muscles',
+      'description': 'Ulcerated mucosal lining',
     },
   ];
 
@@ -48,7 +35,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
 
   Future<void> _loadImageFromFirebase() async {
     try {
-      final Reference storageRef = FirebaseStorage.instance.ref().child('gastro/largeintestine/histo/GIT_Large intestine_High magnification.png');
+      final Reference storageRef = FirebaseStorage.instance.ref().child('gastro/appendix/patho/Acute appendicitis.png');
       String downloadUrl = await storageRef.getDownloadURL();
       setState(() {
         _imageUrl = downloadUrl;
@@ -76,7 +63,6 @@ class _LargeIntestineState extends State<LargeIntestine> {
     final double imageHeight = MediaQuery.of(context).size.width * 0.9;
     final double xTranslation = -points[index]['left']! * scaleFactor + (imageWidth / 2);
     final double yTranslation = -points[index]['top']! * scaleFactor + (imageHeight / 2);
-
     Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
         _transformationController.value = Matrix4.identity()
@@ -121,7 +107,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
   }
 
   void _toggleSection() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LargePath()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AppendixPath()));
   }
 
   @override
@@ -129,22 +115,22 @@ class _LargeIntestineState extends State<LargeIntestine> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '',
+          'Switch to Histology',
           style: TextStyle(color: Colors.white),
+          textAlign: TextAlign.left,
         ),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.red,
         centerTitle: false,
-        actions: [
-          Text(
-            'Switch to Pathology',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
           ),
-          IconButton(
-            icon: Icon(Icons.arrow_forward, color: Colors.white),
-            onPressed: _toggleSection,
-          ),
-        ],
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: _imageUrl.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -188,9 +174,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
                             splashColor: Colors.white.withOpacity(0.5),
                             child: TweenAnimationBuilder<double>(
                               duration: Duration(milliseconds: 300),
-                              tween: Tween<double>(
-                                  begin: 1.0,
-                                  end: index == _currentPointIndex ? 1.5 : 1.0),
+                              tween: Tween<double>(begin: 1.0, end: index == _currentPointIndex ? 1.5 : 1.0),
                               builder: (context, scale, child) {
                                 return Transform.scale(
                                   scale: scale,
@@ -216,78 +200,59 @@ class _LargeIntestineState extends State<LargeIntestine> {
               ),
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: DraggableScrollableSheet(
-              initialChildSize: 0.46,
-              minChildSize: 0.3,
-              maxChildSize: 1.0,
-              builder: (context, scrollController) {
-                return Container(
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
-                  ),
-                  child: SingleChildScrollView(
-                    controller: scrollController,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          height: 8,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        Text(
-                          'Large Intestine',
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'High Magnification',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          _isStarted
-                              ? points[_currentPointIndex]['description']
-                              : 'Under higher magnification, the mucosa of the large intestine shows the crypts of Leiberkuhn with their lining cells, those are the columnar cells and goblet cells. The goblet cells appear empty to basophillic due to the mucin content which washes off during staining process. The connective tissue in the submucosa appear to contain nerve plexus, lymphoid follicles and connective tissue.',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed: _isStarted ? _previousPoint : null,
-                              child: Text('Previous'),
-                            ),
-                            ElevatedButton(
-                              onPressed: _isStarted && _currentPointIndex < points.length - 1 ? _nextPoint : _startProcess,
-                              child: Text(_isStarted ? 'Next' : 'Start'),
-                            ),
-                            ElevatedButton(
-                              onPressed: _isStarted ? _finishProcess : null,
-                              child: Text('Finish'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+          _buildBottomDialog(),
         ],
       ),
     );
   }
+
+  Widget _buildBottomDialog() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.30,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+      ),
+      child: SingleChildScrollView( // Wrap content with SingleChildScrollView
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Acute appendicitis',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16),
+            Text(
+              _isStarted
+                  ? points[_currentPointIndex]['description']
+                  : 'Most important diagnostic feature is neutrophilic infiltration of the muscularis. Mucosa is sloughed and blood vessels in the wall are thrombosed Periappendiceal inflammation is seen in advance cases',
+              style: TextStyle(fontSize: 16, color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: _isStarted ? _previousPoint : null,
+                  child: Text('Previous'),
+                ),
+                ElevatedButton(
+                  onPressed: _isStarted ? _nextPoint : _startProcess,
+                  child: Text(_isStarted ? 'Next' : 'Start'),
+                ),
+                ElevatedButton(
+                  onPressed: _isStarted ? _finishProcess : null,
+                  child: Text('Finish'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }

@@ -1,33 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_histo_path/appendix_path.dart';
 import 'package:flutter_histo_path/large_path.dart';
 import 'package:flutter_histo_path/uterus_path.dart';
+// import 'package:flutter_tts/flutter_tts.dart';
 
-class LargeIntestine extends StatefulWidget {
+class Appendix extends StatefulWidget {
   @override
-  _LargeIntestineState createState() => _LargeIntestineState();
+  _AppendixState createState() => _AppendixState();
 }
 
-class _LargeIntestineState extends State<LargeIntestine> {
+class _AppendixState extends State<Appendix> {
+  // final FlutterTts flutterTts = FlutterTts();
   final List<Map<String, dynamic>> points = [
     {
-      'left': 150.0,
-      'top': 300.0,
+      'left': 210.0,
+      'top': 150.0,
       'color': Colors.red,
-      'description': 'Submucosa containing connective tissue',
+      'description': 'Crypts of Lieberkuhn',
     },
     {
-      'left': 150.0,
+      'left': 300.0,
       'top': 210.0,
       'color': Colors.green,
-      'description': 'Crypts of Lieberkuhn: They are also intestinal glands contains abundant goblet cells',
+      'description': 'Lymphoid follicle: Aggregation of lymphocytes which are part of the gut associated lymphoid tissue (GALT) ',
     },
     {
-      'left': 200.0,
-      'top': 265.0,
+      'left': 270.0,
+      'top': 250.0,
       'color': Colors.purple,
-      'description': 'Muscularis mucosa containing smooth muscles',
+      'description': 'Muscularis mucosa Interrupted due to the extension of lymphoid follicles into the submucosa',
+    },
+    {
+      'left': 60.0,
+      'top': 350.0,
+      'color': Colors.yellow,
+      'description': 'Muscularis externa containing smooth muscles arranged inner circular and outer longitudinally',
+    },
+    {
+      'left': 250.0,
+      'top': 400.0,
+      'color': Colors.pink,
+      'description': 'Serosa',
     },
   ];
 
@@ -48,7 +63,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
 
   Future<void> _loadImageFromFirebase() async {
     try {
-      final Reference storageRef = FirebaseStorage.instance.ref().child('gastro/largeintestine/histo/GIT_Large intestine_High magnification.png');
+      final Reference storageRef = FirebaseStorage.instance.ref().child('gastro/appendix/histo/GIT_Vermiform Appendix.png');
       String downloadUrl = await storageRef.getDownloadURL();
       setState(() {
         _imageUrl = downloadUrl;
@@ -121,7 +136,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
   }
 
   void _toggleSection() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LargePath()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AppendixPath()));
   }
 
   @override
@@ -243,9 +258,13 @@ class _LargeIntestineState extends State<LargeIntestine> {
                           ),
                         ),
                         Text(
-                          'Large Intestine',
+                          'Vermiform Appendix',
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                           textAlign: TextAlign.center,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.volume_up, color: Colors.white),
+                           onPressed: () => speak("Harsh"),
                         ),
                         SizedBox(height: 8),
                         Text(
@@ -257,7 +276,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
                         Text(
                           _isStarted
                               ? points[_currentPointIndex]['description']
-                              : 'Under higher magnification, the mucosa of the large intestine shows the crypts of Leiberkuhn with their lining cells, those are the columnar cells and goblet cells. The goblet cells appear empty to basophillic due to the mucin content which washes off during staining process. The connective tissue in the submucosa appear to contain nerve plexus, lymphoid follicles and connective tissue.',
+                              : 'The vermiform appendix has a narrow, irregular lumen lined by columnar cells with goblet cells. The lamina propria has abundant lymphoid follicles which extend into the submucosa. Due to the extension of the lymphoid follicles, the continuity of the muscularis mucosa is interrupted. The submucosa contains connective tissue and the extended lymphoid follicles. The muscularis externa is arranged inner circularly and outer longitudinally. The outermost layer is the serosa.',
                           style: TextStyle(fontSize: 16, color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
@@ -289,5 +308,11 @@ class _LargeIntestineState extends State<LargeIntestine> {
         ],
       ),
     );
+  }
+
+  speak(String s) async {
+    // await flutterTts.setLanguage("en-US");
+    // await flutterTts.setPitch(1.0);
+    // await flutterTts.speak(s);
   }
 }

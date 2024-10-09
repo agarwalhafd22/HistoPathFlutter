@@ -33,12 +33,14 @@ class _VascularSystemState extends State<VascularSystem> {
   }
 
   void _goToQuiz() {
-    if (selectedTopic == "Colon") {
-    } else if (selectedTopic == "Appendix") {
-    } else if (selectedTopic == "Liver") {
-    } else if (selectedTopic == "Large Intestine") {
+    if (selectedTopic == "Thin Skin") {
+      // Navigate to Thin Skin quiz
+    } else if (selectedTopic == "Thick Skin") {
+      // Navigate to Thick Skin quiz
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,23 +59,23 @@ class _VascularSystemState extends State<VascularSystem> {
             builder: (context, constraints) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 0),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 16.0,
-                      runSpacing: 16.0,
-                      children: [
-                        _buildCard("Colon", () => _selectTopic("Colon"), "assets/images/colon.jpg"),
-                        _buildCard("Appendix", () => _selectTopic("Appendix"), "assets/images/appendix.jpeg"),
-                        _buildCard("Liver", () => _selectTopic("Liver"), "assets/images/liver.jpg"),
-                        _buildCard("Large Intestine", () => _selectTopic("Large Intestine"), "assets/images/largeintestine.jpg"),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 16.0,
+                        runSpacing: 16.0,
+                        children: [
+                          _buildCard("Large Sized Artery", () => _selectTopic("Thin Skin"), "assets/images/large_size_artery.jpg"),
+                          _buildCard("Medium Sized Artery", () => _selectTopic("Thick Skin"), "assets/images/medium_sized_artery.jpg"),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -107,7 +109,7 @@ class _VascularSystemState extends State<VascularSystem> {
                             ),
                             SizedBox(height: 10),
                             GroupButton(
-                              buttons: ["Colon", "Appendix", "Liver", "Large Intestine"],
+                              buttons: ["Large Sized Artery", "Medium Sized Artery"],
                               onSelected: (String label, int index, bool isSelected) {
                                 if (isSelected) {
                                   _selectTopic(label);
@@ -162,20 +164,27 @@ class _VascularSystemState extends State<VascularSystem> {
         ),
         elevation: 8,
         child: Container(
-          width: 120,
-          padding: const EdgeInsets.all(8.0),
+          width: 140,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                title,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                child: Image.asset(
+                  imagePath,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
-              Image.asset(
-                imagePath,
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.center, // Center the text alignment
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ],
           ),
@@ -183,4 +192,5 @@ class _VascularSystemState extends State<VascularSystem> {
       ),
     );
   }
+
 }

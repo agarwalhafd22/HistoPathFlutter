@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_histo_path/appendix.dart';
 import 'package:group_button/group_button.dart';
 import 'package:flutter_prevent_screenshot/disablescreenshot.dart';
 import 'large_intestine.dart';
+import 'liver.dart';
 
 class GastroIntSystem extends StatefulWidget {
   @override
@@ -86,8 +88,20 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
                               MaterialPageRoute(builder: (context) => LargeIntestine()),
                             );
                           }, 'assets/images/largeintestine.jpg'),
-                          _buildCard("Appendix", () => _selectTopic("Appendix"), "assets/images/appendix.jpeg"),
-                          _buildCard("Liver", () => _selectTopic("Liver"), "assets/images/liver.jpg"),
+                          _buildCard("Appendix", () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Appendix()),
+                            );
+                          }, "assets/images/appendix.jpeg"),
+                          _buildCard("Liver", () {
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => Liver()),
+                          );
+                          }, "assets/images/liver.jpg"),
                         ],
                       ),
                     ],
@@ -125,7 +139,7 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
                             ),
                             SizedBox(height: 10),
                             GroupButton(
-                              buttons: ["Colon", "Appendix", "Liver", "Large Intestine"],
+                              buttons: ["Large Intestine", "Appendix", "Liver"],
                               onSelected: (String label, int index, bool isSelected) {
                                 if (isSelected) {
                                   _selectTopic(label);
