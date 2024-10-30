@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_histo_path/large_path.dart';
-import 'package:flutter_histo_path/uterus_path.dart';
+import 'package:slide_scholar/large_path.dart';
+import 'package:slide_scholar/uterus_path.dart';
 
 class LargeIntestine extends StatefulWidget {
   @override

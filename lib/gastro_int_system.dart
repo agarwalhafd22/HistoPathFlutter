@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_histo_path/appendix.dart';
+import 'package:slide_scholar/appendix.dart';
 import 'package:group_button/group_button.dart';
 import 'package:flutter_prevent_screenshot/disablescreenshot.dart';
 import 'large_intestine.dart';

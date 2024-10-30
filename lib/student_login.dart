@@ -8,11 +8,11 @@ import 'package:flutter/scheduler.dart';
 import 'teacher_login.dart';
 import 'student_sign_up.dart';
 import 'main_activity.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+// import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   if (kIsWeb) {}
   await Firebase.initializeApp(
     options: FirebaseOptions(

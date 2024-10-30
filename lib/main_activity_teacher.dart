@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_histo_path/renal_system.dart';
-import 'package:flutter_histo_path/skeletal_system.dart';
-import 'package:flutter_histo_path/vascular_system.dart';
+import 'package:slide_scholar/renal_system.dart';
+import 'package:slide_scholar/skeletal_system.dart';
+import 'package:slide_scholar/vascular_system.dart';
 import 'endocrine_system.dart';
 import 'integumentary_system.dart';
 import 'lymphatic_system.dart';
