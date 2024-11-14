@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:slide_scholar/large_path.dart';
-import 'package:slide_scholar/uterus_path.dart';
 
 class LargeIntestine extends StatefulWidget {
   @override
@@ -12,21 +11,22 @@ class LargeIntestine extends StatefulWidget {
 class _LargeIntestineState extends State<LargeIntestine> {
   final List<Map<String, dynamic>> points = [
     {
-      'left': 150.0,
-      'top': 300.0,
+      'leftPercent': 0.4, // Adjusted for screen width percentage 0.42
+      'topPercent': 0.45, // Adjusted for screen height percentage 0.4
       'color': Colors.red,
       'description': 'Submucosa containing connective tissue',
     },
     {
-      'left': 150.0,
-      'top': 210.0,
+      'leftPercent': 0.45,
+      'topPercent': 0.3,
       'color': Colors.green,
-      'description': 'Crypts of Lieberkuhn: They are also intestinal glands contains abundant goblet cells',
+      'description':
+      'Crypts of Lieberkuhn: They are also intestinal glands contains abundant goblet cells',
     },
     {
-      'left': 200.0,
-      'top': 265.0,
-      'color': Colors.purple,
+      'leftPercent': 0.58,
+      'topPercent': 0.40,
+      'color': Colors.yellow,
       'description': 'Muscularis mucosa containing smooth muscles',
     },
   ];
@@ -46,9 +46,21 @@ class _LargeIntestineState extends State<LargeIntestine> {
     _loadImageFromFirebase();
   }
 
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   SystemChrome.setPreferredOrientations([
+  //     DeviceOrientation.portraitUp,
+  //     DeviceOrientation.portraitDown,
+  //   ]);
+  // }
+
+
   Future<void> _loadImageFromFirebase() async {
     try {
-      final Reference storageRef = FirebaseStorage.instance.ref().child('gastro/largeintestine/histo/GIT_Large intestine_High magnification.png');
+      final Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('gastro/largeintestine/histo/GIT_Large intestine_High magnification.png');
       String downloadUrl = await storageRef.getDownloadURL();
       setState(() {
         _imageUrl = downloadUrl;
@@ -63,8 +75,6 @@ class _LargeIntestineState extends State<LargeIntestine> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
     ]);
     _transformationController.dispose();
     super.dispose();
@@ -74,8 +84,8 @@ class _LargeIntestineState extends State<LargeIntestine> {
     final double scaleFactor = 2.0;
     final double imageWidth = MediaQuery.of(context).size.width * 0.9;
     final double imageHeight = MediaQuery.of(context).size.width * 0.9;
-    final double xTranslation = -points[index]['left']! * scaleFactor + (imageWidth / 2);
-    final double yTranslation = -points[index]['top']! * scaleFactor + (imageHeight / 2);
+    final double xTranslation = -points[index]['leftPercent']! * imageWidth * scaleFactor + (imageWidth / 2);
+    final double yTranslation = -points[index]['topPercent']! * imageHeight * scaleFactor + (imageHeight / 2);
 
     Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
@@ -126,6 +136,9 @@ class _LargeIntestineState extends State<LargeIntestine> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -133,7 +146,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
           style: TextStyle(color: Colors.white),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         centerTitle: false,
         actions: [
           Text(
@@ -153,7 +166,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
           Expanded(
             flex: 2,
             child: Container(
-              width: MediaQuery.of(context).size.width,
+              width: screenWidth,
               child: InteractiveViewer(
                 transformationController: _transformationController,
                 panEnabled: true,
@@ -165,14 +178,16 @@ class _LargeIntestineState extends State<LargeIntestine> {
                     Center(
                       child: Image.network(
                         _imageUrl,
-                        fit: BoxFit.cover,
+                        width: screenWidth,
+                        height: screenHeight *0.9,
+                        fit: BoxFit.contain,
                       ),
                     ),
                     ...points.map((point) {
                       final index = points.indexOf(point);
                       return Positioned(
-                        left: point['left']!,
-                        top: point['top']!,
+                        left: point['leftPercent']! * screenWidth,
+                        top: point['topPercent']! * screenHeight * 0.9,
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
@@ -226,7 +241,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
                 return Container(
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: Color(0xFF052e62),
                     borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
                   ),
                   child: SingleChildScrollView(
@@ -257,7 +272,7 @@ class _LargeIntestineState extends State<LargeIntestine> {
                         Text(
                           _isStarted
                               ? points[_currentPointIndex]['description']
-                              : 'Under higher magnification, the mucosa of the large intestine shows the crypts of Leiberkuhn with their lining cells, those are the columnar cells and goblet cells. The goblet cells appear empty to basophillic due to the mucin content which washes off during staining process. The connective tissue in the submucosa appear to contain nerve plexus, lymphoid follicles and connective tissue.',
+                              : 'Under higher magnification, the mucosa of the large intestine shows the crypts of Leiberkuhn with their lining cells...',
                           style: TextStyle(fontSize: 16, color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
@@ -270,7 +285,9 @@ class _LargeIntestineState extends State<LargeIntestine> {
                               child: Text('Previous'),
                             ),
                             ElevatedButton(
-                              onPressed: _isStarted && _currentPointIndex < points.length - 1 ? _nextPoint : _startProcess,
+                              onPressed: _isStarted && _currentPointIndex < points.length - 1
+                                  ? _nextPoint
+                                  : _startProcess,
                               child: Text(_isStarted ? 'Next' : 'Start'),
                             ),
                             ElevatedButton(

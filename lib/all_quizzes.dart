@@ -49,7 +49,7 @@ class _AllQuizzesState extends State<AllQuizzes> {
           'All Quizzes',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // Bold font and white color
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
@@ -106,7 +106,7 @@ class QuizDetails extends StatelessWidget {
           quiz['title'],
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         automaticallyImplyLeading: false,
       ),
       body: Padding(

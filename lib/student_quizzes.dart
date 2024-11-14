@@ -19,15 +19,58 @@ class _StudentQuizzesState extends State<StudentQuizzes> {
   }
 
   // Function to fetch current date and time from the internet
-  Future<DateTime> _fetchCurrentDateTime() async {
-    final response = await http.get(Uri.parse('http://worldtimeapi.org/api/timezone/Etc/UTC'));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      String dateTimeString = data['datetime'];
-      return DateTime.parse(dateTimeString);
-    } else {
-      throw Exception('Failed to load current date and time');
+  // Future<DateTime> _fetchCurrentDateTime() async {
+  //   final response = await http.get(Uri.parse('http://worldtimeapi.org/api/timezone/Etc/UTC'));
+  //   if (response.statusCode == 200) {
+  //     final data = json.decode(response.body);
+  //     String dateTimeString = data['datetime'];
+  //     return DateTime.parse(dateTimeString);
+  //   } else {
+  //     throw Exception('Failed to load current date and time');
+  //   }
+  // }
+
+
+  // Future<DateTime> _fetchCurrentDateTime({int retries = 5}) async {
+  //   for (int attempt = 0; attempt < retries; attempt++) {
+  //     try {
+  //       final response = await http.get(Uri.parse('http://worldtimeapi.org/api/timezone/Etc/UTC'));
+  //       if (response.statusCode == 200) {
+  //         final data = json.decode(response.body);
+  //         String dateTimeString = data['datetime'];
+  //         return DateTime.parse(dateTimeString);
+  //       } else {
+  //         throw Exception('Failed to load current date and time');
+  //       }
+  //     } catch (e) {
+  //       if (attempt == retries - 1) {
+  //         throw Exception('Error fetching current date and time after $retries attempts');
+  //       }
+  //       await Future.delayed(Duration(seconds: 2));
+  //     }
+  //   }
+  //   return DateTime.now(); // Fallback in case all attempts fail
+  // }
+
+  Future<DateTime> _fetchCurrentDateTime({int retries = 5}) async {
+    for (int attempt = 0; attempt < retries; attempt++) {
+      try {
+        final response = await http.get(Uri.parse('https://timeapi.io/api/Time/current/zone?timeZone=UTC'));
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          String dateTimeString = data['dateTime'];
+          return DateTime.parse(dateTimeString);
+        } else {
+          throw Exception('Failed to load current date and time');
+        }
+      } catch (e) {
+        if (attempt == retries - 1) {
+          throw Exception('Error fetching current date and time after $retries attempts');
+        }
+        await Future.delayed(Duration(seconds: 2));
+      }
     }
+    return DateTime.now(); // Fallback if all attempts fail
   }
 
   // Function to navigate to quiz details page
@@ -68,7 +111,7 @@ class _StudentQuizzesState extends State<StudentQuizzes> {
           'All Quizzes',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
@@ -250,7 +293,7 @@ class QuizDetails extends StatelessWidget {
           quiz['title'],
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         automaticallyImplyLeading: false,
       ),
       body: Padding(
@@ -394,7 +437,7 @@ class _OngoingQuizState extends State<OngoingQuiz> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red, // Set app bar background to red
+        backgroundColor: Color(0xFF052e62), // Set app bar background to red
         automaticallyImplyLeading: false,
         title: Text(widget.quiz['title'], style: TextStyle(color: Colors.white),),
       ),

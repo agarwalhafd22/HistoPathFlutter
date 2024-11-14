@@ -52,7 +52,7 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         title: Text(
           "Female Reproductive System",
           style: TextStyle(color: Colors.white),
@@ -155,7 +155,7 @@ class _FemaleReproductiveSystemState extends State<FemaleReproductiveSystem> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showQuizOptions,
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         child: Text(
           "Quiz",
           style: TextStyle(color: Colors.white),

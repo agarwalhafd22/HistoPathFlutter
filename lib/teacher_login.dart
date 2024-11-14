@@ -28,7 +28,7 @@ class _TeacherLoginState extends State<TeacherLogin> {
     return Scaffold(
       appBar: AppBar(
         title: null,
-        backgroundColor: Color(0xFFbe252d),
+        backgroundColor: Color(0xFF052e62),
       ),
       body: SingleChildScrollView(
         child: Padding(

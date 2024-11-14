@@ -78,14 +78,20 @@ class _MainActivityTeacherState extends State<MainActivityTeacher> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Color(0xFFbe252d),
+        backgroundColor: Color(0xFF052e62),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(
+              Icons.menu,
+            color: Colors.white,
+          ),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: Icon(
+                Icons.notifications,
+              color: Colors.white,
+            ),
             onPressed: () {},
           ),
         ],
@@ -105,6 +111,9 @@ class _MainActivityTeacherState extends State<MainActivityTeacher> {
                       accountName.isNotEmpty ? accountName[0] : 'T',
                       style: TextStyle(fontSize: 40.0),
                     ),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF052e62), // Set color for the profile area
                   ),
                 ),
                 ListTile(

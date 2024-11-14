@@ -11,8 +11,8 @@ class AppendixPath extends StatefulWidget {
 class _AppendixPathState extends State<AppendixPath> {
   final List<Map<String, dynamic>> points = [
     {
-      'left': 60.0,
-      'top': 180.0,
+      'left': 140.0,
+      'top': 250.0,
       'color': Colors.red,
       'description': 'Ulcerated mucosal lining',
     },
@@ -120,7 +120,7 @@ class _AppendixPathState extends State<AppendixPath> {
           textAlign: TextAlign.left,
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         centerTitle: false,
         leading: IconButton(
           icon: Icon(
@@ -211,7 +211,7 @@ class _AppendixPathState extends State<AppendixPath> {
       height: MediaQuery.of(context).size.height * 0.30,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.red,
+        color: Color(0xFF052e62),
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
       child: SingleChildScrollView( // Wrap content with SingleChildScrollView

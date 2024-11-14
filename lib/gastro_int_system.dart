@@ -1,7 +1,8 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:slide_scholar/appendix.dart';
 import 'package:group_button/group_button.dart';
-import 'package:flutter_prevent_screenshot/disablescreenshot.dart';
+// import 'package:flutter_prevent_screenshot/disablescreenshot.dart';
 import 'large_intestine.dart';
 import 'liver.dart';
 
@@ -14,16 +15,18 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
   bool isQuizVisible = false;
   bool isNextVisible = false;
   String selectedTopic = "";
+  String selectedAction = ""; // Track which action was selected
 
   @override
   void initState(){
     super.initState();
-    FlutterPreventScreenshot.instance.screenshotOff();
+    // FlutterPreventScreenshot.instance.screenshotOff();
   }
 
-  void _showQuizOptions() {
+  void _showQuizOptions(String action) {
     setState(() {
       isQuizVisible = true;
+      selectedAction = action; // Set the action based on the button pressed
     });
   }
 
@@ -43,14 +46,286 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
   }
 
   void _goToQuiz() {
-    if (selectedTopic == "Colon") {
-      // Navigate to colonQuiz
+    if (selectedAction == "Quiz") {
+      _navigateToQuiz();
+    } else if (selectedAction == "HandDrawnImages") {
+      _navigateToHandDrawnImages();
+    }
+  }
+
+  void _navigateToQuiz() {
+    if (selectedTopic == "Large Intestine") {
+      // Navigate to Large Intestine quiz screen
     } else if (selectedTopic == "Appendix") {
-      // Navigate to appendixQuiz
+      // Navigate to Appendix quiz screen
     } else if (selectedTopic == "Liver") {
-      // Navigate to liverQuiz
-    } else if (selectedTopic == "Large Intestine") {
-      // Navigate to largeIntestineQuiz
+      // Navigate to Liver quiz screen
+    }
+  }
+
+  void _navigateToHandDrawnImages() {
+    if (selectedTopic == "Large Intestine") {
+      List<Map<String, String>> images = [
+        {'path': 'assets/images/largeintestinehanddrawn.jpg', 'caption': 'Histology View'},
+        {'path': 'assets/images/largeintestinehanddrawn2.jpg', 'caption': 'Pathology View'},
+        // Add more images and captions as needed
+      ];
+      int currentIndex = 0;
+
+      void _showImageDialog(int index) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blurs the background
+              child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: SingleChildScrollView( // Make dialog scrollable
+                      child: Container(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: InteractiveViewer(
+                                boundaryMargin: EdgeInsets.all(8.0),
+                                minScale: 1.0,
+                                maxScale: 4.0, // Adjust max scale as needed
+                                child: Image.asset(
+                                  images[currentIndex]['path']!, // Display the current image
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              images[currentIndex]['caption']!, // Display the caption
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                if (currentIndex > 0)
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_back),
+                                    onPressed: () {
+                                      setState(() {
+                                        currentIndex--;
+                                      });
+                                    },
+                                  ),
+                                Spacer(),
+                                if (currentIndex < images.length - 1)
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_forward),
+                                    onPressed: () {
+                                      setState(() {
+                                        currentIndex++;
+                                      });
+                                    },
+                                  ),
+                              ],
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(), // Close the dialog
+                              child: Text("Close", style: TextStyle(color: Color(0xFF052e62))),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        );
+      }
+
+      _showImageDialog(currentIndex);
+    } else if (selectedTopic == "Appendix") {
+      List<Map<String, String>> images = [
+        {'path': 'assets/images/appendixhanddrawn.jpg', 'caption': 'Histology View'},
+        {'path': 'assets/images/appendixhanddrawn2.jpg', 'caption': 'Pathology View'},
+        // Add more images and captions as needed
+      ];
+      int currentIndex = 0;
+
+      void _showImageDialog(int index) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blurs the background
+              child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: SingleChildScrollView( // Make dialog scrollable
+                      child: Container(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: InteractiveViewer(
+                                boundaryMargin: EdgeInsets.all(8.0),
+                                minScale: 1.0,
+                                maxScale: 4.0, // Adjust max scale as needed
+                                child: Image.asset(
+                                  images[currentIndex]['path']!, // Display the current image
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              images[currentIndex]['caption']!, // Display the caption
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                if (currentIndex > 0)
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_back),
+                                    onPressed: () {
+                                      setState(() {
+                                        currentIndex--;
+                                      });
+                                    },
+                                  ),
+                                Spacer(),
+                                if (currentIndex < images.length - 1)
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_forward),
+                                    onPressed: () {
+                                      setState(() {
+                                        currentIndex++;
+                                      });
+                                    },
+                                  ),
+                              ],
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(), // Close the dialog
+                              child: Text("Close", style: TextStyle(color: Color(0xFF052e62))),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        );
+      }
+
+      _showImageDialog(currentIndex);
+    } else if (selectedTopic == "Liver") {
+      List<Map<String, String>> images = [
+        {'path': 'assets/images/liverhanddrawn.jpg', 'caption': 'Histology View'},
+        {'path': 'assets/images/liverhanddrawn2.jpg', 'caption': 'Pathology View'},
+        // Add more images and captions as needed
+      ];
+      int currentIndex = 0;
+
+      void _showImageDialog(int index) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blurs the background
+              child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: SingleChildScrollView( // Make dialog scrollable
+                      child: Container(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: InteractiveViewer(
+                                boundaryMargin: EdgeInsets.all(8.0),
+                                minScale: 1.0,
+                                maxScale: 4.0, // Adjust max scale as needed
+                                child: Image.asset(
+                                  images[currentIndex]['path']!, // Display the current image
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              images[currentIndex]['caption']!, // Display the caption
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                if (currentIndex > 0)
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_back),
+                                    onPressed: () {
+                                      setState(() {
+                                        currentIndex--;
+                                      });
+                                    },
+                                  ),
+                                Spacer(),
+                                if (currentIndex < images.length - 1)
+                                  IconButton(
+                                    icon: Icon(Icons.arrow_forward),
+                                    onPressed: () {
+                                      setState(() {
+                                        currentIndex++;
+                                      });
+                                    },
+                                  ),
+                              ],
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(), // Close the dialog
+                              child: Text("Close", style: TextStyle(color: Color(0xFF052e62))),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        );
+
+      }
+
+      _showImageDialog(currentIndex);
     }
   }
 
@@ -58,7 +333,7 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         title: Text(
           "Gastrointestinal System",
           style: TextStyle(color: Colors.white),
@@ -91,16 +366,14 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
                           _buildCard("Appendix", () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => Appendix()),
+                              MaterialPageRoute(builder: (context) => Appendix()),
                             );
                           }, "assets/images/appendix.jpeg"),
                           _buildCard("Liver", () {
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) => Liver()),
-                          );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Liver()),
+                            );
                           }, "assets/images/liver.jpg"),
                         ],
                       ),
@@ -146,6 +419,7 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
                                 }
                               },
                               isRadio: true,
+
                             ),
                             SizedBox(height: 20),
                             Row(
@@ -172,15 +446,31 @@ class _GastroIntSystemState extends State<GastroIntSystem> {
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showQuizOptions,
-        backgroundColor: Colors.red,
-        child: Text(
-          "Quiz",
-          style: TextStyle(color: Colors.white),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FloatingActionButton.extended(
+              onPressed: () => _showQuizOptions("Quiz"),
+              backgroundColor: Color(0xFF052e62),
+              label: Text(
+                "Quiz",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            FloatingActionButton.extended(
+              onPressed: () => _showQuizOptions("HandDrawnImages"),
+              backgroundColor: Color(0xFF052e62),
+              label: Text(
+                "Hand drawn Images",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

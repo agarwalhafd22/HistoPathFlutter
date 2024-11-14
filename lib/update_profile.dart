@@ -89,7 +89,14 @@ class _UpdateProfileState extends State<UpdateProfile> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('Update Profile')),
+      appBar: AppBar(
+          title: Text(
+              'Update Profile',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        backgroundColor: Color(0xFF052e62),
+        automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Center(

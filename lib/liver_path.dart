@@ -11,20 +11,20 @@ class LiverPath extends StatefulWidget {
 class _LiverPathState extends State<LiverPath> {
   final List<Map<String, dynamic>> points = [
     {
-      'left': 60.0,
-      'top': 180.0,
+      'left': 120.0,
+      'top': 230.0,
       'color': Colors.red,
       'description': 'Nodulation of liver',
     },
     {
-      'left': 300.0,
-      'top': 180.0,
+      'left': 700.0,
+      'top': 250.0,
       'color': Colors.green,
       'description': 'Ulcerated mucosal lining',
     },
     {
-      'left': 160.0,
-      'top': 300.0,
+      'left': 350.0,
+      'top': 550.0,
       'color': Colors.yellow,
       'description': 'Fibrous bands separating these nodules',
     },
@@ -132,7 +132,7 @@ class _LiverPathState extends State<LiverPath> {
           textAlign: TextAlign.left,
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         centerTitle: false,
         leading: IconButton(
           icon: Icon(
@@ -223,7 +223,7 @@ class _LiverPathState extends State<LiverPath> {
       height: MediaQuery.of(context).size.height * 0.30,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.red,
+        color: Color(0xFF052e62),
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
       child: SingleChildScrollView( // Wrap content with SingleChildScrollView

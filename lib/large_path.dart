@@ -11,14 +11,14 @@ class LargePath extends StatefulWidget {
 class _LargePathState extends State<LargePath> {
   final List<Map<String, dynamic>> points = [
     {
-      'left': 290.0,
-      'top': 135.0,
+      'left': 620.0,
+      'top': 240.0,
       'color': Colors.red,
       'description': 'Malignant glands infiltration',
     },
     {
-      'left': 330.0,
-      'top': 215.0,
+      'left': 740.0,
+      'top': 320.0,
       'color': Colors.green,
       'description': 'Desmoplastic stroma',
     },
@@ -126,7 +126,7 @@ class _LargePathState extends State<LargePath> {
           textAlign: TextAlign.left,
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         centerTitle: false,
         leading: IconButton(
           icon: Icon(
@@ -217,7 +217,7 @@ class _LargePathState extends State<LargePath> {
       height: MediaQuery.of(context).size.height * 0.30,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.red,
+        color: Color(0xFF052e62),
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
       child: SingleChildScrollView( // Wrap content with SingleChildScrollView

@@ -16,32 +16,32 @@ class _AppendixState extends State<Appendix> {
   // final FlutterTts flutterTts = FlutterTts();
   final List<Map<String, dynamic>> points = [
     {
-      'left': 210.0,
-      'top': 150.0,
+      'left': 460.0,
+      'top': 240.0,
       'color': Colors.red,
       'description': 'Crypts of Lieberkuhn',
     },
     {
-      'left': 300.0,
-      'top': 210.0,
+      'left': 600.0,
+      'top': 360.0,
       'color': Colors.green,
       'description': 'Lymphoid follicle: Aggregation of lymphocytes which are part of the gut associated lymphoid tissue (GALT) ',
     },
     {
-      'left': 270.0,
-      'top': 250.0,
+      'left': 580.0,
+      'top': 400.0,
       'color': Colors.purple,
       'description': 'Muscularis mucosa Interrupted due to the extension of lymphoid follicles into the submucosa',
     },
     {
-      'left': 60.0,
-      'top': 350.0,
+      'left': 120.0,
+      'top': 580.0,
       'color': Colors.yellow,
       'description': 'Muscularis externa containing smooth muscles arranged inner circular and outer longitudinally',
     },
     {
-      'left': 250.0,
-      'top': 400.0,
+      'left': 600.0,
+      'top': 640.0,
       'color': Colors.pink,
       'description': 'Serosa',
     },
@@ -149,7 +149,7 @@ class _AppendixState extends State<Appendix> {
           style: TextStyle(color: Colors.white),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         centerTitle: false,
         actions: [
           Text(
@@ -242,7 +242,7 @@ class _AppendixState extends State<Appendix> {
                 return Container(
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: Color(0xFF052e62),
                     borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
                   ),
                   child: SingleChildScrollView(
@@ -263,10 +263,10 @@ class _AppendixState extends State<Appendix> {
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
-                        IconButton(
-                          icon: Icon(Icons.volume_up, color: Colors.white),
-                           onPressed: () => speak("Harsh"),
-                        ),
+                        // IconButton(
+                        //   icon: Icon(Icons.volume_up, color: Colors.white),
+                        //    onPressed: () => speak("Harsh"),
+                        // ),
                         SizedBox(height: 8),
                         Text(
                           'High Magnification',

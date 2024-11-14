@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Student Portal',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primaryColor: Color(0xFF052e62),
       ),
       debugShowCheckedModeBanner: false,
       home: StudentLogin(),
@@ -64,7 +64,7 @@ class _StudentLoginState extends State<StudentLogin> {
     return Scaffold(
       appBar: AppBar(
         title: null,
-        backgroundColor: Color(0xFFbe252d),
+        backgroundColor: Color(0xFF052e62),
       ),
       body: SingleChildScrollView(
         child: Padding(

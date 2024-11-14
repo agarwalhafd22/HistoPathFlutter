@@ -15,21 +15,21 @@ class Liver extends StatefulWidget {
 class _LiverState extends State<Liver> {
   final List<Map<String, dynamic>> points = [
     {
-      'left': 220.0,
-      'top': 150.0,
+      'left': 492.0,
+      'top': 235.0,
       'color': Colors.red,
       'description': 'Branch of hepatic artery',
     },
     {
-      'left': 270.0,
-      'top': 180.0,
+      'left': 600.0,
+      'top': 275.0,
       'color': Colors.green,
       'description': 'Branch of hepatic duct',
     },
     {
-      'left': 230.0,
-      'top': 250.0,
-      'color': Colors.purple,
+      'left': 500.0,
+      'top': 400.0,
+      'color': Colors.yellow,
       'description': 'Cords of hepatocytes',
     },
   ];
@@ -136,7 +136,7 @@ class _LiverState extends State<Liver> {
           style: TextStyle(color: Colors.white),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         centerTitle: false,
         actions: [
           Text(
@@ -229,7 +229,7 @@ class _LiverState extends State<Liver> {
                 return Container(
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: Color(0xFF052e62),
                     borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
                   ),
                   child: SingleChildScrollView(

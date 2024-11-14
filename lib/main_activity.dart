@@ -97,14 +97,20 @@ class _MainActivityState extends State<MainActivity> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFF052e62),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(
+              Icons.menu,
+            color: Colors.white,
+          ),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: Icon(
+                Icons.notifications,
+                    color: Colors.white,
+            ),
             onPressed: () {
 
             },
@@ -112,6 +118,7 @@ class _MainActivityState extends State<MainActivity> {
         ],
       ),
       drawer: Drawer(
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -126,6 +133,9 @@ class _MainActivityState extends State<MainActivity> {
                       accountName.isNotEmpty ? accountName[0] : 'U',
                       style: TextStyle(fontSize: 40.0),
                     ),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF052e62), // Set color for the profile area
                   ),
                 ),
                 ListTile(
@@ -178,9 +188,9 @@ class _MainActivityState extends State<MainActivity> {
               if (isWeb) {
                 cardWidth = constraints.maxWidth * 0.2;
               } else if (isLandscape) {
-                cardWidth = constraints.maxWidth * 0.35;
+                cardWidth = 310.0;
               } else {
-                cardWidth = constraints.maxWidth * 0.9;
+                cardWidth = 310.0;
               }
 
               return Center(
